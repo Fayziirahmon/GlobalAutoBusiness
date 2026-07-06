@@ -1,0 +1,193 @@
+import { useState, useEffect } from 'react'
+import { NavLink, Link, useLocation } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useTheme } from '../context/ThemeContext'
+import { useScrollY } from '../hooks/useScrollAnimation'
+import { Icon } from './Icons'
+
+const navLinks = [
+  { path: '/', label: 'Home' },
+  { path: '/shop', label: 'Shop' },
+  { path: '/contact', label: 'Contact' },
+]
+
+function Logo({ compact }) {
+  const { isDark } = useTheme()
+  return (
+    <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 11, flexShrink: 0 }}>
+      <div style={{
+        width: compact ? 34 : 36, height: compact ? 34 : 36, borderRadius: 9,
+        background: 'var(--accent)', color: 'var(--accent-fg)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: isDark ? '0 0 22px var(--glow)' : 'none', flexShrink: 0,
+      }}>
+        <Icon name="box" size={19} />
+      </div>
+      <div style={{ lineHeight: 1.05 }}>
+        <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 700, fontSize: 16, color: 'var(--text)', letterSpacing: '-0.4px' }}>
+          GlobalAuto<span style={{ color: 'var(--text3)' }}>Business</span>
+        </div>
+        <div style={{ fontSize: 9, color: 'var(--text3)', letterSpacing: '2.4px', textTransform: 'uppercase', marginTop: 2 }}>
+          Truck Spare Parts
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false)
+  const { isDark, toggle } = useTheme()
+  const location = useLocation()
+  const scrollY = useScrollY()
+  const scrolled = scrollY > 40
+
+  useEffect(() => { setOpen(false) }, [location])
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
+  return (
+    <>
+      <motion.header
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
+          transition: 'background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease',
+          background: scrolled ? 'var(--navbar-bg)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(22px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(22px) saturate(180%)' : 'none',
+          borderBottom: `1px solid ${scrolled ? 'var(--border)' : 'transparent'}`,
+        }}
+      >
+        <div className="container" style={{ display: 'flex', alignItems: 'center', height: 70 }}>
+          <Logo />
+          <div style={{ flex: 1 }} />
+
+          {/* Desktop nav */}
+          <nav className="desk-nav" style={{ display: 'flex', alignItems: 'center', gap: 2, marginRight: 18 }}>
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.path}
+                to={link.path}
+                end={link.path === '/'}
+                style={({ isActive }) => ({
+                  padding: '8px 15px', borderRadius: 9, fontSize: 13.5,
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? 'var(--text)' : 'var(--text3)',
+                  background: isActive ? 'var(--bg3)' : 'transparent',
+                  transition: 'all 0.2s ease',
+                })}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button
+              onClick={toggle}
+              aria-label="Toggle theme"
+              style={{
+                width: 39, height: 39, borderRadius: 10,
+                background: 'var(--bg3)', border: '1px solid var(--border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'var(--text)', transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg4)'; e.currentTarget.style.borderColor = 'var(--border2)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--bg3)'; e.currentTarget.style.borderColor = 'var(--border)' }}
+            >
+              <Icon name={isDark ? 'sun' : 'moon'} size={17} />
+            </button>
+
+            <Link to="/shop" className="btn btn-primary desk-cta" style={{ padding: '10px 20px', fontSize: 13.5, borderRadius: 9 }}>
+              Browse Parts
+            </Link>
+
+            <button
+              onClick={() => setOpen(!open)}
+              className="ham-btn"
+              aria-label="Menu"
+              style={{
+                width: 39, height: 39, borderRadius: 10,
+                background: 'var(--bg3)', border: '1px solid var(--border)',
+                display: 'none', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center', gap: 5, padding: 8,
+              }}
+            >
+              {[0, 1, 2].map((i) => (
+                <span key={i} style={{
+                  display: 'block', width: open ? (i === 1 ? 0 : 20) : 20, height: 1.5,
+                  background: 'var(--text)', borderRadius: 1, transition: 'all 0.3s ease',
+                  transformOrigin: 'center',
+                  transform: open
+                    ? i === 0 ? 'rotate(45deg) translate(4px, 4px)'
+                    : i === 2 ? 'rotate(-45deg) translate(4px, -4px)' : 'scaleX(0)'
+                    : 'none',
+                  opacity: open && i === 1 ? 0 : 1,
+                }} />
+              ))}
+            </button>
+          </div>
+        </div>
+      </motion.header>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'var(--bg)', paddingTop: 90, paddingLeft: 24, paddingRight: 24 }}
+          >
+            <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.path}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <NavLink
+                    to={link.path}
+                    end={link.path === '/'}
+                    style={({ isActive }) => ({
+                      display: 'block', padding: '16px 20px', borderRadius: 12,
+                      fontSize: 26, fontWeight: 600, fontFamily: 'Space Grotesk, sans-serif',
+                      color: isActive ? 'var(--text)' : 'var(--text2)',
+                      background: isActive ? 'var(--bg3)' : 'transparent', letterSpacing: '-0.5px',
+                    })}
+                  >
+                    {link.label}
+                  </NavLink>
+                </motion.div>
+              ))}
+            </nav>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+              style={{ position: 'absolute', bottom: 44, left: 24, right: 24 }}
+            >
+              <Link to="/shop" className="btn btn-primary btn-lg btn-block" onClick={() => setOpen(false)}>
+                Browse All Parts <Icon name="arrow" size={17} />
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style>{`
+        @media (max-width: 820px) {
+          .desk-nav { display: none !important; }
+          .ham-btn  { display: flex !important; }
+          .desk-cta { display: none !important; }
+        }
+      `}</style>
+    </>
+  )
+}
