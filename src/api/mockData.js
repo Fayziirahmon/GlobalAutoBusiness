@@ -1,39 +1,74 @@
 /*
  * ─────────────────────────────────────────────────────────────
- *  MOCK DATA — placeholder catalog
+ *  MOCK DATA — curated demo catalog (Home featured + Shop)
  *
- *  This is the ONLY place product/category data is defined in the
- *  front-end. Pages never hardcode products; they call the API
- *  layer in `client.js`, which falls back to this data when the
- *  real backend (/api/...) is not yet available.
- *
- *  When the backend is ready, the live endpoints will be used
- *  automatically and this file can be deleted.
+ *  Product `name` and `desc` are multilingual { ru, en, uz } objects,
+ *  localized at render time via tl(). This mirrors how the real API
+ *  should return translatable fields. Category text is resolved by id
+ *  through the i18n dictionary (cat.<id>), so categories below only
+ *  need id / icon / count.
  * ─────────────────────────────────────────────────────────────
  */
 
 export const categories = [
-  { id: 'engine',       name: 'Engine Parts',  icon: 'engine',       count: 482, blurb: 'Pistons, gaskets, turbochargers & core components.' },
-  { id: 'transmission', name: 'Transmission',  icon: 'transmission', count: 263, blurb: 'Clutches, gearboxes, shafts & drivetrain.' },
-  { id: 'suspension',   name: 'Suspension',    icon: 'suspension',   count: 311, blurb: 'Air springs, shocks, bushings & control arms.' },
-  { id: 'brakes',       name: 'Brakes',        icon: 'brakes',       count: 198, blurb: 'Discs, drums, pads, calipers & ABS modules.' },
-  { id: 'electrical',   name: 'Electrical',    icon: 'electrical',   count: 354, blurb: 'Alternators, starters, sensors & wiring.' },
-  { id: 'filters',      name: 'Filters',       icon: 'filters',      count: 176, blurb: 'Oil, fuel, air & cabin filtration systems.' },
+  { id: 'engine',       icon: 'engine',       count: 482 },
+  { id: 'transmission', icon: 'transmission', count: 263 },
+  { id: 'suspension',   icon: 'suspension',   count: 311 },
+  { id: 'brakes',       icon: 'brakes',       count: 198 },
+  { id: 'electrical',   icon: 'electrical',   count: 354 },
+  { id: 'filters',      icon: 'filters',      count: 176 },
 ]
 
-const img = (seed) => `https://picsum.photos/seed/${seed}/800/600?grayscale`
+const img = (seed) => `https://picsum.photos/seed/${seed}/800/800`
 
-export const products = [
-  { id: 'p-1001', name: 'Heavy-Duty Turbocharger HX55', category: 'engine',       price: 1480, sku: 'GAB-ENG-55HX', rating: 4.9, reviews: 128, brand: 'GAB OEM', stock: 24, featured: true,  image: img('turbo'),       desc: 'Precision-balanced turbocharger engineered for long-haul diesel engines, delivering optimal boost and thermal endurance under continuous load.' },
-  { id: 'p-1002', name: 'Cylinder Head Gasket Set',     category: 'engine',       price: 240,  sku: 'GAB-ENG-HG12', rating: 4.7, reviews: 86,  brand: 'GAB OEM', stock: 140, featured: false, image: img('gasket'),      desc: 'Multi-layer steel gasket kit with reinforced fire rings for a leak-free, high-compression seal across the cylinder bank.' },
-  { id: 'p-1003', name: 'Clutch Kit 430mm Pull-Type',   category: 'transmission', price: 620,  sku: 'GAB-TRN-430P', rating: 4.8, reviews: 64,  brand: 'GAB Pro', stock: 38,  featured: true,  image: img('clutch'),      desc: 'Complete heavy-vehicle clutch assembly with organic facing, pressure plate and release bearing for smooth high-torque engagement.' },
-  { id: 'p-1004', name: 'Synchromesh Gearbox Bearing',  category: 'transmission', price: 95,   sku: 'GAB-TRN-BR07', rating: 4.6, reviews: 41,  brand: 'GAB Pro', stock: 210, featured: false, image: img('bearing'),     desc: 'Hardened tapered roller bearing built to withstand sustained drivetrain stress and elevated operating temperatures.' },
-  { id: 'p-1005', name: 'Air Suspension Spring Bellow', category: 'suspension',   price: 178,  sku: 'GAB-SUS-AS21', rating: 4.8, reviews: 73,  brand: 'GAB OEM', stock: 96,  featured: true,  image: img('airspring'),   desc: 'Reinforced rubber air spring providing a stable, load-adaptive ride for trailers and heavy axles.' },
-  { id: 'p-1006', name: 'Front Shock Absorber Pair',    category: 'suspension',   price: 320,  sku: 'GAB-SUS-SA09', rating: 4.7, reviews: 58,  brand: 'GAB Pro', stock: 64,  featured: false, image: img('shock'),       desc: 'Twin-tube gas shock absorbers tuned for cab comfort and chassis control on rough terrain.' },
-  { id: 'p-1007', name: 'Brake Disc Ventilated 430mm',  category: 'brakes',       price: 210,  sku: 'GAB-BRK-D43V', rating: 4.9, reviews: 112, brand: 'GAB OEM', stock: 120, featured: true,  image: img('brakedisc'),   desc: 'Ventilated cast-iron brake disc engineered for rapid heat dissipation and consistent stopping power under heavy braking.' },
-  { id: 'p-1008', name: 'Heavy Truck Brake Pad Set',    category: 'brakes',       price: 130,  sku: 'GAB-BRK-PD18', rating: 4.6, reviews: 90,  brand: 'GAB Pro', stock: 300, featured: false, image: img('brakepad'),    desc: 'Low-dust ceramic-composite brake pads delivering quiet, fade-resistant performance and extended service life.' },
-  { id: 'p-1009', name: '24V Heavy-Duty Alternator',    category: 'electrical',   price: 410,  sku: 'GAB-ELC-AL24', rating: 4.8, reviews: 77,  brand: 'GAB OEM', stock: 52,  featured: true,  image: img('alternator'),  desc: 'High-output 24V alternator with sealed bearings, designed for reliable charging in demanding commercial duty cycles.' },
-  { id: 'p-1010', name: 'Starter Motor 6.5kW',          category: 'electrical',   price: 365,  sku: 'GAB-ELC-ST65', rating: 4.7, reviews: 49,  brand: 'GAB Pro', stock: 70,  featured: false, image: img('starter'),     desc: 'Gear-reduction starter motor providing strong cold-cranking torque for large-displacement diesel engines.' },
-  { id: 'p-1011', name: 'Spin-On Oil Filter LF9009',    category: 'filters',      price: 28,   sku: 'GAB-FLT-LF90', rating: 4.9, reviews: 204, brand: 'GAB OEM', stock: 540, featured: true,  image: img('oilfilter'),   desc: 'High-efficiency spin-on oil filter with anti-drain-back valve protecting the engine during cold starts.' },
-  { id: 'p-1012', name: 'Fuel/Water Separator Filter',  category: 'filters',      price: 46,   sku: 'GAB-FLT-FS33', rating: 4.8, reviews: 156, brand: 'GAB Pro', stock: 420, featured: false, image: img('fuelfilter'),  desc: 'Two-stage fuel filter with integrated water separation to safeguard injectors and the fuel system.' },
+// Shared localized descriptions by category (keeps demo data fully translated).
+const CAT_DESC = {
+  engine:       { ru: 'Надёжный компонент двигателя для грузовиков и тяжёлой техники, рассчитанный на высокие нагрузки и длительную работу.', en: 'Reliable engine component for trucks and heavy vehicles, engineered for high loads and long service life.', uz: 'Yuqori yuklama va uzoq muddatli ishga mo‘ljallangan yuk mashinalar uchun ishonchli dvigatel qismi.' },
+  transmission: { ru: 'Прочная деталь трансмиссии для стабильной передачи крутящего момента в тяжёлых условиях.', en: 'Durable transmission part for smooth, high-torque power transfer under demanding conditions.', uz: 'Og‘ir sharoitlarda yuqori momentni uzatish uchun mustahkam transmissiya qismi.' },
+  suspension:   { ru: 'Компонент подвески, обеспечивающий устойчивость и комфорт на любой дороге.', en: 'Suspension component delivering stability and ride comfort on any road.', uz: 'Har qanday yo‘lda barqarorlik va qulaylik beruvchi osma qismi.' },
+  brakes:       { ru: 'Тормозная деталь с высокой теплоотдачей и стабильным тормозным усилием.', en: 'Braking part with strong heat dissipation and consistent stopping power.', uz: 'Yuqori issiqlik tarqatish va barqaror tormozlash kuchiga ega tormoz qismi.' },
+  electrical:   { ru: 'Электрический компонент для надёжной работы в тяжёлых коммерческих циклах.', en: 'Electrical component built for reliable operation in demanding commercial duty cycles.', uz: 'Og‘ir tijorat sharoitlarida ishonchli ishlash uchun elektr qismi.' },
+  filters:      { ru: 'Высокоэффективный фильтр, защищающий двигатель и топливную систему.', en: 'High-efficiency filter that protects the engine and fuel system.', uz: 'Dvigatel va yoqilg‘i tizimini himoya qiluvchi yuqori samarali filtr.' },
+}
+
+const P = [
+  { id: 'p-1001', category: 'engine',       price: 1480, brand: 'GAB OEM', rating: 4.9, reviews: 128, stock: 24,  featured: true,  seed: 'turbo',
+    name: { ru: 'Турбокомпрессор HX55 (Heavy-Duty)', en: 'Heavy-Duty Turbocharger HX55', uz: 'Turbokompressor HX55 (kuchaytirilgan)' } },
+  { id: 'p-1002', category: 'engine',       price: 240,  brand: 'GAB OEM', rating: 4.7, reviews: 86,  stock: 140, featured: false, seed: 'gasket',
+    name: { ru: 'Комплект прокладок ГБЦ', en: 'Cylinder Head Gasket Set', uz: 'Silindr kallagi gasket to‘plami' } },
+  { id: 'p-1003', category: 'transmission', price: 620,  brand: 'GAB Pro', rating: 4.8, reviews: 64,  stock: 38,  featured: true,  seed: 'clutch',
+    name: { ru: 'Комплект сцепления 430мм (нажимной)', en: 'Clutch Kit 430mm Pull-Type', uz: 'Debriaj to‘plami 430mm (tortma)' } },
+  { id: 'p-1004', category: 'transmission', price: 95,   brand: 'GAB Pro', rating: 4.6, reviews: 41,  stock: 210, featured: false, seed: 'bearing',
+    name: { ru: 'Подшипник КПП (синхромеш)', en: 'Synchromesh Gearbox Bearing', uz: 'Sinxromesh korobka podshipnigi' } },
+  { id: 'p-1005', category: 'suspension',   price: 178,  brand: 'GAB OEM', rating: 4.8, reviews: 73,  stock: 96,  featured: true,  seed: 'airspring',
+    name: { ru: 'Пневморессора подвески', en: 'Air Suspension Spring Bellow', uz: 'Havo osma prujinasi' } },
+  { id: 'p-1006', category: 'suspension',   price: 320,  brand: 'GAB Pro', rating: 4.7, reviews: 58,  stock: 64,  featured: false, seed: 'shock',
+    name: { ru: 'Пара передних амортизаторов', en: 'Front Shock Absorber Pair', uz: 'Old amortizatorlar jufti' } },
+  { id: 'p-1007', category: 'brakes',       price: 210,  brand: 'GAB OEM', rating: 4.9, reviews: 112, stock: 120, featured: true,  seed: 'brakedisc',
+    name: { ru: 'Тормозной диск вентилируемый 430мм', en: 'Brake Disc Ventilated 430mm', uz: 'Ventilyatsiyali tormoz diski 430mm' } },
+  { id: 'p-1008', category: 'brakes',       price: 130,  brand: 'GAB Pro', rating: 4.6, reviews: 90,  stock: 300, featured: false, seed: 'brakepad',
+    name: { ru: 'Комплект тормозных колодок (грузовой)', en: 'Heavy Truck Brake Pad Set', uz: 'Yuk mashina tormoz kolodkalari to‘plami' } },
+  { id: 'p-1009', category: 'electrical',   price: 410,  brand: 'GAB OEM', rating: 4.8, reviews: 77,  stock: 52,  featured: true,  seed: 'alternator',
+    name: { ru: 'Генератор 24В (Heavy-Duty)', en: '24V Heavy-Duty Alternator', uz: '24V kuchaytirilgan generator' } },
+  { id: 'p-1010', category: 'electrical',   price: 365,  brand: 'GAB Pro', rating: 4.7, reviews: 49,  stock: 70,  featured: false, seed: 'starter',
+    name: { ru: 'Стартер 6.5кВт', en: 'Starter Motor 6.5kW', uz: 'Starter 6.5kVt' } },
+  { id: 'p-1011', category: 'filters',      price: 28,   brand: 'GAB OEM', rating: 4.9, reviews: 204, stock: 540, featured: true,  seed: 'oilfilter',
+    name: { ru: 'Масляный фильтр LF9009', en: 'Spin-On Oil Filter LF9009', uz: 'Moy filtri LF9009' } },
+  { id: 'p-1012', category: 'filters',      price: 46,   brand: 'GAB Pro', rating: 4.8, reviews: 156, stock: 420, featured: false, seed: 'fuelfilter',
+    name: { ru: 'Фильтр-сепаратор топливо/вода', en: 'Fuel/Water Separator Filter', uz: 'Yoqilg‘i/suv separator filtri' } },
 ]
+
+export const products = P.map((p) => ({
+  id: p.id,
+  name: p.name,
+  category: p.category,
+  price: p.price,
+  sku: `GAB-${p.category.slice(0, 3).toUpperCase()}-${p.id.slice(-4)}`,
+  rating: p.rating,
+  reviews: p.reviews,
+  brand: p.brand,
+  stock: p.stock,
+  featured: p.featured,
+  image: img(p.seed),
+  desc: CAT_DESC[p.category],
+}))

@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import { Icon } from './Icons'
+import { useLang } from '../context/LanguageContext'
 
 export default function CategoryCard({ category }) {
   const { id, name, icon, count, blurb } = category
+  const { t } = useLang()
   return (
     <Link
       to={`/shop?category=${id}`}
@@ -30,12 +32,12 @@ export default function CategoryCard({ category }) {
       </div>
 
       <h3 style={{ fontSize: 20, fontWeight: 600, letterSpacing: '-0.5px', marginBottom: 8, color: 'var(--text)' }}>
-        {name}
+        {t(`cat.${id}.name`, name)}
       </h3>
-      <p style={{ fontSize: 13.5, color: 'var(--text3)', lineHeight: 1.6, marginBottom: 'auto' }}>{blurb}</p>
+      <p style={{ fontSize: 13.5, color: 'var(--text3)', lineHeight: 1.6, marginBottom: 'auto' }}>{t(`cat.${id}.blurb`, blurb)}</p>
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 22 }}>
-        <span className="caption" style={{ fontSize: 11 }}>{count} parts</span>
+        <span className="caption" style={{ fontSize: 11 }}>{count} {t('unit.parts')}</span>
         <span className="category-card__arrow" style={{
           color: 'var(--text2)', display: 'inline-flex',
           transition: 'transform 0.35s var(--ease), color 0.35s var(--ease)',

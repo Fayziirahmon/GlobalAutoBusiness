@@ -1,30 +1,41 @@
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+import { useLang } from '../context/LanguageContext'
 import { Icon } from './Icons'
 
-const cols = {
-  Catalog: [
-    { l: 'Engine Parts', p: '/shop?category=engine' },
-    { l: 'Transmission', p: '/shop?category=transmission' },
-    { l: 'Suspension', p: '/shop?category=suspension' },
-    { l: 'Brakes', p: '/shop?category=brakes' },
-  ],
-  Company: [
-    { l: 'Shop All Parts', p: '/shop' },
-    { l: 'Featured', p: '/shop' },
-    { l: 'Electrical', p: '/shop?category=electrical' },
-    { l: 'Filters', p: '/shop?category=filters' },
-  ],
-  Support: [
-    { l: 'Contact Us', p: '/contact' },
-    { l: 'Shipping & Returns', p: '/contact' },
-    { l: 'Bulk Orders', p: '/contact' },
-    { l: 'Find a Part', p: '/contact' },
-  ],
-}
+const cols = [
+  {
+    titleKey: 'footer.catalog',
+    items: [
+      { k: 'cat.engine.name', p: '/shop?category=engine' },
+      { k: 'cat.transmission.name', p: '/shop?category=transmission' },
+      { k: 'cat.suspension.name', p: '/shop?category=suspension' },
+      { k: 'cat.brakes.name', p: '/shop?category=brakes' },
+    ],
+  },
+  {
+    titleKey: 'footer.company',
+    items: [
+      { k: 'footer.shopAll', p: '/shop' },
+      { k: 'footer.featured', p: '/shop' },
+      { k: 'cat.electrical.name', p: '/shop?category=electrical' },
+      { k: 'cat.filters.name', p: '/shop?category=filters' },
+    ],
+  },
+  {
+    titleKey: 'footer.support',
+    items: [
+      { k: 'footer.contactUs', p: '/contact' },
+      { k: 'footer.shipping', p: '/contact' },
+      { k: 'footer.bulk', p: '/contact' },
+      { k: 'footer.findPart', p: '/contact' },
+    ],
+  },
+]
 
 export default function Footer() {
   const { isDark } = useTheme()
+  const { t } = useLang()
   return (
     <footer style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)' }}>
       <div className="container">
@@ -44,11 +55,11 @@ export default function Footer() {
                 <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 16, letterSpacing: '-0.4px' }}>
                   GlobalAuto<span style={{ color: 'var(--text3)' }}>Business</span>
                 </div>
-                <div style={{ fontSize: 9, color: 'var(--text3)', letterSpacing: '2.4px', textTransform: 'uppercase', marginTop: 2 }}>Truck Spare Parts</div>
+                <div style={{ fontSize: 9, color: 'var(--text3)', letterSpacing: '2.4px', textTransform: 'uppercase', marginTop: 2 }}>{t('nav.tagline')}</div>
               </div>
             </Link>
             <p style={{ color: 'var(--text3)', fontSize: 13.5, lineHeight: 1.75, maxWidth: 260, marginBottom: 22 }}>
-              Premium spare parts for trucks and heavy vehicles. Genuine quality, global supply, trusted by professionals worldwide.
+              {t('footer.brandDesc')}
             </p>
             <div style={{ display: 'flex', gap: 8 }}>
               {['mail', 'phone', 'globe', 'truck'].map((icon) => (
@@ -67,16 +78,16 @@ export default function Footer() {
             </div>
           </div>
 
-          {Object.entries(cols).map(([title, items]) => (
-            <div key={title}>
-              <h4 style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '1.4px', marginBottom: 20 }}>{title}</h4>
+          {cols.map((col) => (
+            <div key={col.titleKey}>
+              <h4 style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '1.4px', marginBottom: 20 }}>{t(col.titleKey)}</h4>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 13 }}>
-                {items.map((item, i) => (
-                  <li key={item.l + i}>
+                {col.items.map((item, i) => (
+                  <li key={item.k + i}>
                     <Link to={item.p} style={{ color: 'var(--text3)', fontSize: 13.5, transition: 'color 0.2s', display: 'block' }}
                       onMouseEnter={(e) => { e.target.style.color = 'var(--text)' }}
                       onMouseLeave={(e) => { e.target.style.color = 'var(--text3)' }}>
-                      {item.l}
+                      {t(item.k)}
                     </Link>
                   </li>
                 ))}
@@ -96,23 +107,28 @@ export default function Footer() {
               <Icon name="support" size={20} />
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text3)', letterSpacing: '1px', textTransform: 'uppercase' }}>24/7 Parts Support</div>
-              <a href="tel:+18005550199" style={{ fontSize: 19, fontWeight: 700, fontFamily: 'Space Grotesk', letterSpacing: '-0.5px', color: 'var(--text)' }}>
-                +1 (800) 555-0199
-              </a>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text3)', letterSpacing: '1px', textTransform: 'uppercase' }}>{t('footer.banner')}</div>
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                <a href="tel:+998903716666" style={{ fontSize: 18, fontWeight: 700, fontFamily: 'Space Grotesk', letterSpacing: '-0.5px', color: 'var(--text)' }}>
+                  +998 90 371 66 66
+                </a>
+                <a href="tel:+998983618884" style={{ fontSize: 18, fontWeight: 700, fontFamily: 'Space Grotesk', letterSpacing: '-0.5px', color: 'var(--text)' }}>
+                  +998 98 361 88 84
+                </a>
+              </div>
             </div>
           </div>
-          <a href="mailto:parts@globalautobusiness.com" style={{ fontSize: 13.5, color: 'var(--text3)' }}>
-            parts@globalautobusiness.com
+          <a href="mailto:globalautobusiness.uz@gmail.com" style={{ fontSize: 13.5, color: 'var(--text3)' }}>
+            globalautobusiness.uz@gmail.com
           </a>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 0', borderTop: '1px solid var(--border)', flexWrap: 'wrap', gap: 12 }}>
           <p style={{ color: 'var(--text3)', fontSize: 12.5 }}>
-            © {new Date().getFullYear()} GlobalAutoBusiness — Premium Truck & Heavy Vehicle Spare Parts
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <div style={{ display: 'flex', gap: 24 }}>
-            {['Privacy', 'Terms', 'Warranty'].map((item) => (
+            {[t('footer.privacy'), t('footer.terms'), t('footer.warranty')].map((item) => (
               <span key={item} style={{ color: 'var(--text3)', fontSize: 12.5, cursor: 'pointer', transition: 'color 0.2s' }}
                 onMouseEnter={(e) => { e.target.style.color = 'var(--text)' }}
                 onMouseLeave={(e) => { e.target.style.color = 'var(--text3)' }}>

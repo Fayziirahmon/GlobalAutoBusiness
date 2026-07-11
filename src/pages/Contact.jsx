@@ -2,18 +2,25 @@ import { useState } from 'react'
 import PageWrapper from '../components/PageWrapper'
 import Reveal from '../components/Reveal'
 import { Icon } from '../components/Icons'
+import { useLang } from '../context/LanguageContext'
 
 const channels = [
-  { icon: 'phone', label: 'Call us', value: '+1 (800) 555-0199', href: 'tel:+18005550199' },
-  { icon: 'mail',  label: 'Email',   value: 'parts@globalautobusiness.com', href: 'mailto:parts@globalautobusiness.com' },
-  { icon: 'pin',   label: 'Warehouse', value: 'Dallas, TX · Global Distribution', href: null },
-  { icon: 'support', label: 'Support', value: 'Available 24 / 7', href: null },
+  {
+    icon: 'phone', labelKey: 'contact.callUs',
+    lines: [
+      { text: '+998 90 371 66 66', href: 'tel:+998903716666' },
+      { text: '+998 98 361 88 84', href: 'tel:+998983618884' },
+    ],
+  },
+  { icon: 'mail',    labelKey: 'contact.email',    value: 'globalautobusiness.uz@gmail.com', href: 'mailto:globalautobusiness.uz@gmail.com' },
+  { icon: 'pin',     labelKey: 'contact.location', valueKey: 'contact.viewMaps', href: 'https://maps.app.goo.gl/rffS65bLksDa9RqV8?g_st=it', external: true },
+  { icon: 'support', labelKey: 'contact.support',  valueKey: 'contact.available', href: null },
 ]
 
-const subjects = ['General inquiry', 'Find a specific part', 'Bulk / fleet order', 'Warranty & returns', 'Shipping question']
-
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', company: '', subject: subjects[0], message: '' })
+  const { t } = useLang()
+  const subjects = t('contact.subjects')
+  const [form, setForm] = useState({ name: '', email: '', company: '', subjectIdx: 0, message: '' })
   const [status, setStatus] = useState('idle') // idle | sending | sent
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
@@ -21,12 +28,13 @@ export default function Contact() {
   const submit = async (e) => {
     e.preventDefault()
     setStatus('sending')
+    const payload = { ...form, subject: subjects[form.subjectIdx] }
     try {
       // Placeholder endpoint — developer wires the real backend later.
       await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       }).catch(() => {}) // swallow network error in demo mode
     } finally {
       setTimeout(() => setStatus('sent'), 600)
@@ -39,10 +47,10 @@ export default function Contact() {
       <section style={{ paddingTop: 140, paddingBottom: 50, borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
         <div className="container">
           <Reveal>
-            <span className="badge"><span className="dot" /> Contact</span>
-            <h1 className="heading-xl" style={{ margin: '20px 0 16px', maxWidth: 720 }}>Let&apos;s find your part.</h1>
+            <span className="badge"><span className="dot" /> {t('contact.badge')}</span>
+            <h1 className="heading-xl" style={{ margin: '20px 0 16px', maxWidth: 720 }}>{t('contact.title')}</h1>
             <p className="body-lg" style={{ maxWidth: 560 }}>
-              Tell us the make, model and part number — or describe what you need. Our specialists reply fast, any hour of the day.
+              {t('contact.subtitle')}
             </p>
           </Reveal>
         </div>
@@ -55,24 +63,46 @@ export default function Contact() {
             <Reveal>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {channels.map((c) => {
+                  const iconBox = (
+                    <div style={{
+                      width: 46, height: 46, borderRadius: 12, flexShrink: 0,
+                      background: 'var(--bg3)', border: '1px solid var(--border)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text)',
+                    }}>
+                      <Icon name={c.icon} size={20} />
+                    </div>
+                  )
+                  const label = t(c.labelKey)
+
+                  // Multi-line card (e.g. two phone numbers)
+                  if (c.lines) {
+                    return (
+                      <div key={c.labelKey} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 22 }}>
+                        {iconBox}
+                        <div>
+                          <div className="caption" style={{ fontSize: 10.5, marginBottom: 5 }}>{label}</div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                            {c.lines.map((l) => (
+                              <a key={l.href} href={l.href} style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>{l.text}</a>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
+
                   const inner = (
                     <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 22 }}>
-                      <div style={{
-                        width: 46, height: 46, borderRadius: 12, flexShrink: 0,
-                        background: 'var(--bg3)', border: '1px solid var(--border)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text)',
-                      }}>
-                        <Icon name={c.icon} size={20} />
-                      </div>
+                      {iconBox}
                       <div>
-                        <div className="caption" style={{ fontSize: 10.5, marginBottom: 3 }}>{c.label}</div>
-                        <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>{c.value}</div>
+                        <div className="caption" style={{ fontSize: 10.5, marginBottom: 3 }}>{label}</div>
+                        <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>{c.valueKey ? t(c.valueKey) : c.value}</div>
                       </div>
                     </div>
                   )
-                  return c.href
-                    ? <a key={c.label} href={c.href}>{inner}</a>
-                    : <div key={c.label}>{inner}</div>
+                  if (!c.href) return <div key={c.labelKey}>{inner}</div>
+                  const ext = c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+                  return <a key={c.labelKey} href={c.href} {...ext}>{inner}</a>
                 })}
 
                 <div style={{
@@ -81,10 +111,10 @@ export default function Contact() {
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                     <Icon name="globe" size={20} />
-                    <strong style={{ fontSize: 15 }}>Global supply network</strong>
+                    <strong style={{ fontSize: 15 }}>{t('contact.globalNet')}</strong>
                   </div>
                   <p style={{ fontSize: 13.5, opacity: 0.75, lineHeight: 1.6 }}>
-                    Shipping to 60+ countries with express options for urgent fleet downtime.
+                    {t('contact.globalNetDesc')}
                   </p>
                 </div>
               </div>
@@ -102,41 +132,41 @@ export default function Contact() {
                     }}>
                       <Icon name="check" size={30} />
                     </div>
-                    <h3 className="heading-md" style={{ marginBottom: 10 }}>Message received</h3>
-                    <p className="body-md" style={{ marginBottom: 26 }}>Thanks, {form.name || 'there'}. Our parts team will get back to you shortly.</p>
-                    <button className="btn btn-outline" onClick={() => { setStatus('idle'); setForm({ name: '', email: '', company: '', subject: subjects[0], message: '' }) }}>
-                      Send another message
+                    <h3 className="heading-md" style={{ marginBottom: 10 }}>{t('contact.sentTitle')}</h3>
+                    <p className="body-md" style={{ marginBottom: 26 }}>{t('contact.sentDesc', { name: form.name || '' })}</p>
+                    <button className="btn btn-outline" onClick={() => { setStatus('idle'); setForm({ name: '', email: '', company: '', subjectIdx: 0, message: '' }) }}>
+                      {t('contact.sendAnother')}
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
                     <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
-                      <Field label="Full name" required value={form.name} onChange={set('name')} placeholder="John Carter" />
-                      <Field label="Email" type="email" required value={form.email} onChange={set('email')} placeholder="you@company.com" />
+                      <Field label={t('contact.fullName')} required value={form.name} onChange={set('name')} placeholder={t('contact.namePh')} />
+                      <Field label={t('contact.emailLabel')} type="email" required value={form.email} onChange={set('email')} placeholder="you@company.com" />
                     </div>
-                    <Field label="Company (optional)" value={form.company} onChange={set('company')} placeholder="Fleet Co." />
+                    <Field label={t('contact.company')} value={form.company} onChange={set('company')} placeholder={t('contact.companyPh')} />
 
                     <div>
-                      <Label>Subject</Label>
-                      <select value={form.subject} onChange={set('subject')} style={inputStyle}>
-                        {subjects.map((s) => <option key={s}>{s}</option>)}
+                      <Label>{t('contact.subject')}</Label>
+                      <select value={form.subjectIdx} onChange={set('subjectIdx')} style={inputStyle}>
+                        {subjects.map((s, i) => <option key={i} value={i}>{s}</option>)}
                       </select>
                     </div>
 
                     <div>
-                      <Label>Message</Label>
+                      <Label>{t('contact.message')}</Label>
                       <textarea
                         required value={form.message} onChange={set('message')} rows={5}
-                        placeholder="Include vehicle make, model, year and any part numbers…"
+                        placeholder={t('contact.messagePh')}
                         style={{ ...inputStyle, resize: 'vertical', minHeight: 120 }}
                       />
                     </div>
 
                     <button type="submit" className="btn btn-primary btn-lg btn-block" disabled={status === 'sending'} style={{ marginTop: 4 }}>
-                      {status === 'sending' ? 'Sending…' : <>Send Message <Icon name="arrow" size={17} /></>}
+                      {status === 'sending' ? t('contact.sending') : <>{t('contact.send')} <Icon name="arrow" size={17} /></>}
                     </button>
                     <p style={{ fontSize: 12, color: 'var(--text3)', textAlign: 'center' }}>
-                      We typically respond within a few hours.
+                      {t('contact.note')}
                     </p>
                   </form>
                 )}

@@ -6,12 +6,13 @@ import ProductCard from '../components/ProductCard'
 import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
 import { getCategories, getProducts } from '../api/client'
+import { useLang } from '../context/LanguageContext'
 
 const sorts = [
-  { id: 'featured', label: 'Featured' },
-  { id: 'price-asc', label: 'Price: Low to High' },
-  { id: 'price-desc', label: 'Price: High to Low' },
-  { id: 'rating', label: 'Top Rated' },
+  { id: 'featured', key: 'featured' },
+  { id: 'price-asc', key: 'priceAsc' },
+  { id: 'price-desc', key: 'priceDesc' },
+  { id: 'rating', key: 'rating' },
 ]
 
 function ProductSkeleton() {
@@ -28,6 +29,7 @@ function ProductSkeleton() {
 }
 
 export default function Shop() {
+  const { t } = useLang()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeCategory = searchParams.get('category') || 'all'
 
@@ -57,18 +59,19 @@ export default function Shop() {
     }
   }, [products, sort])
 
-  const chips = [{ id: 'all', name: 'All Parts' }, ...(categories ?? [])]
-  const activeName = chips.find((c) => c.id === activeCategory)?.name ?? 'All Parts'
+  const chips = [{ id: 'all' }, ...(categories ?? [])]
+  const chipLabel = (c) => (c.id === 'all' ? t('shop.allParts') : t(`cat.${c.id}.name`, c.name))
+  const activeName = activeCategory === 'all' ? t('shop.allParts') : t(`cat.${activeCategory}.name`, activeCategory)
 
   return (
     <PageWrapper>
       {/* Header */}
       <section style={{ paddingTop: 140, paddingBottom: 40, borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
         <div className="container">
-          <span className="caption">Catalog</span>
+          <span className="caption">{t('shop.catalog')}</span>
           <h1 className="heading-xl" style={{ margin: '14px 0 16px' }}>{activeName}</h1>
           <p className="body-lg" style={{ maxWidth: 560 }}>
-            Browse certified spare parts for trucks and heavy vehicles. Use the filters to narrow by system, search, or sort.
+            {t('shop.subtitle')}
           </p>
         </div>
       </section>
@@ -85,7 +88,7 @@ export default function Shop() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by name, SKU or brand…"
+                placeholder={t('shop.search')}
                 style={{
                   width: '100%', padding: '13px 16px 13px 44px',
                   background: 'var(--bg2)', border: '1px solid var(--border2)',
@@ -96,7 +99,7 @@ export default function Shop() {
 
             {/* Sort */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span className="caption" style={{ fontSize: 11 }}>Sort</span>
+              <span className="caption" style={{ fontSize: 11 }}>{t('shop.sort')}</span>
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
@@ -106,7 +109,7 @@ export default function Shop() {
                   fontSize: 14, color: 'var(--text)', cursor: 'pointer',
                 }}
               >
-                {sorts.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+                {sorts.map((s) => <option key={s.id} value={s.id}>{t(`sorts.${s.key}`)}</option>)}
               </select>
             </div>
           </div>
@@ -127,7 +130,7 @@ export default function Shop() {
                     transition: 'all 0.2s var(--ease)',
                   }}
                 >
-                  {c.name}
+                  {chipLabel(c)}
                 </button>
               )
             })}
@@ -141,12 +144,12 @@ export default function Shop() {
           ) : sorted.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text3)' }}>
               <div style={{ display: 'inline-flex', marginBottom: 16, color: 'var(--text3)' }}><Icon name="search" size={40} strokeWidth={1.2} /></div>
-              <h3 className="heading-md" style={{ color: 'var(--text)', marginBottom: 8 }}>No parts found</h3>
-              <p>Try a different search term or category.</p>
+              <h3 className="heading-md" style={{ color: 'var(--text)', marginBottom: 8 }}>{t('shop.noFound')}</h3>
+              <p>{t('shop.noFoundSub')}</p>
             </div>
           ) : (
             <>
-              <p style={{ color: 'var(--text3)', fontSize: 13.5, marginBottom: 20 }}>{sorted.length} parts</p>
+              <p style={{ color: 'var(--text3)', fontSize: 13.5, marginBottom: 20 }}>{t('shop.count', { n: sorted.length })}</p>
               <div className="grid-4">
                 {sorted.map((p, i) => (
                   <Reveal key={p.id} delay={(i % 4) * 60}><ProductCard product={p} /></Reveal>

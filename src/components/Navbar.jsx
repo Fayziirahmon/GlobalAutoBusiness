@@ -2,17 +2,21 @@ import { useState, useEffect } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '../context/ThemeContext'
+import { useLang } from '../context/LanguageContext'
 import { useScrollY } from '../hooks/useScrollAnimation'
 import { Icon } from './Icons'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const navLinks = [
-  { path: '/', label: 'Home' },
-  { path: '/shop', label: 'Shop' },
-  { path: '/contact', label: 'Contact' },
+  { path: '/', key: 'home' },
+  { path: '/shop', key: 'shop' },
+  { path: '/products', key: 'products' },
+  { path: '/contact', key: 'contact' },
 ]
 
 function Logo({ compact }) {
   const { isDark } = useTheme()
+  const { t } = useLang()
   return (
     <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 11, flexShrink: 0 }}>
       <div style={{
@@ -28,7 +32,7 @@ function Logo({ compact }) {
           GlobalAuto<span style={{ color: 'var(--text3)' }}>Business</span>
         </div>
         <div style={{ fontSize: 9, color: 'var(--text3)', letterSpacing: '2.4px', textTransform: 'uppercase', marginTop: 2 }}>
-          Truck Spare Parts
+          {t('nav.tagline')}
         </div>
       </div>
     </Link>
@@ -38,6 +42,7 @@ function Logo({ compact }) {
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { isDark, toggle } = useTheme()
+  const { t } = useLang()
   const location = useLocation()
   const scrollY = useScrollY()
   const scrolled = scrollY > 40
@@ -82,12 +87,13 @@ export default function Navbar() {
                   transition: 'all 0.2s ease',
                 })}
               >
-                {link.label}
+                {t(`nav.${link.key}`)}
               </NavLink>
             ))}
           </nav>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div className="desk-lang"><LanguageSwitcher /></div>
             <button
               onClick={toggle}
               aria-label="Toggle theme"
@@ -104,7 +110,7 @@ export default function Navbar() {
             </button>
 
             <Link to="/shop" className="btn btn-primary desk-cta" style={{ padding: '10px 20px', fontSize: 13.5, borderRadius: 9 }}>
-              Browse Parts
+              {t('nav.browse')}
             </Link>
 
             <button
@@ -164,17 +170,18 @@ export default function Navbar() {
                       background: isActive ? 'var(--bg3)' : 'transparent', letterSpacing: '-0.5px',
                     })}
                   >
-                    {link.label}
+                    {t(`nav.${link.key}`)}
                   </NavLink>
                 </motion.div>
               ))}
             </nav>
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-              style={{ position: 'absolute', bottom: 44, left: 24, right: 24 }}
+              style={{ position: 'absolute', bottom: 44, left: 24, right: 24, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}
             >
+              <LanguageSwitcher size="lg" />
               <Link to="/shop" className="btn btn-primary btn-lg btn-block" onClick={() => setOpen(false)}>
-                Browse All Parts <Icon name="arrow" size={17} />
+                {t('nav.browseAll')} <Icon name="arrow" size={17} />
               </Link>
             </motion.div>
           </motion.div>
@@ -183,9 +190,10 @@ export default function Navbar() {
 
       <style>{`
         @media (max-width: 820px) {
-          .desk-nav { display: none !important; }
-          .ham-btn  { display: flex !important; }
-          .desk-cta { display: none !important; }
+          .desk-nav  { display: none !important; }
+          .ham-btn   { display: flex !important; }
+          .desk-cta  { display: none !important; }
+          .desk-lang { display: none !important; }
         }
       `}</style>
     </>
