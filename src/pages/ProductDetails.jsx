@@ -7,6 +7,8 @@ import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
 import { getProduct } from '../api/client'
 import { useLang } from '../context/LanguageContext'
+import Seo from '../components/Seo'
+import { SITE_URL, SITE_NAME } from '../seo/seo.config'
 
 function Loading() {
   return (
@@ -36,6 +38,7 @@ export default function ProductDetails() {
   if (error || !product) {
     return (
       <PageWrapper>
+        <Seo title={`${t('pd.notFound')} — ${SITE_NAME}`} noindex />
         <div className="container" style={{ paddingTop: 180, paddingBottom: 160, textAlign: 'center' }}>
           <h1 className="heading-lg" style={{ marginBottom: 14 }}>{t('pd.notFound')}</h1>
           <p className="body-md" style={{ marginBottom: 28 }}>{t('pd.notFoundSub')}</p>
@@ -47,7 +50,31 @@ export default function ProductDetails() {
 
   const inStock = product.stock > 0
   const title = tl(product.name)
+  const descText = tl(product.desc)
   const catLabel = t(`cat.${product.category}.name`, product.category)
+
+  const productLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: title,
+    image: product.image,
+    description: descText,
+    sku: product.sku,
+    category: catLabel,
+    brand: { '@type': 'Brand', name: product.brand },
+    ...(product.reviews > 0 && {
+      aggregateRating: { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviews },
+    }),
+    ...(product.price > 0 && {
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'USD',
+        price: product.price,
+        availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        url: `${SITE_URL}/product/${product.id}`,
+      },
+    }),
+  }
   const specs = [
     { k: t('pd.sku'), v: product.sku },
     { k: t('pd.brand'), v: product.brand },
@@ -57,6 +84,14 @@ export default function ProductDetails() {
 
   return (
     <PageWrapper>
+      <Seo
+        title={`${title} — ${SITE_NAME}`}
+        description={descText}
+        type="product"
+        image={product.image}
+        canonicalPath={`/product/${product.id}`}
+        jsonLd={productLd}
+      />
       {/* Breadcrumb */}
       <div className="container" style={{ paddingTop: 110, paddingBottom: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text3)' }}>

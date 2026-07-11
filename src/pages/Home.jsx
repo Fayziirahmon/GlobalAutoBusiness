@@ -8,6 +8,7 @@ import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
 import { getCategories, getProducts } from '../api/client'
 import { useLang } from '../context/LanguageContext'
+import Seo from '../components/Seo'
 
 const ease = [0.22, 1, 0.36, 1]
 
@@ -41,7 +42,6 @@ function Hero() {
       <video
         className="hero-video"
         autoPlay muted loop playsInline preload="auto"
-        poster="/hero-poster.jpg"
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
         onError={(e) => { e.currentTarget.style.display = 'none' }}
       >
@@ -143,6 +143,7 @@ export default function Home() {
 
   return (
     <PageWrapper>
+      <Seo title={t('seo.home.title')} description={t('seo.home.desc')} canonicalPath="/" />
       <Hero />
 
       {/* ── Categories ── */}

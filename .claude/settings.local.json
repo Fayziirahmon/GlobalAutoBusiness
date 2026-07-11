@@ -4,7 +4,12 @@
       "Bash(npm run *)",
       "Bash(npm install *)",
       "Bash(ls -la)",
-      "Bash(cat package.json)"
+      "Bash(cat package.json)",
+      "Bash(curl -s -o /dev/null -w \"home:%{http_code}\\\\n\" \"http://localhost:5173/\")",
+      "Bash(curl -s -o /dev/null -w \"video:%{http_code} size:%{size_download}\\\\n\" \"http://localhost:5173/hero.mp4\")",
+      "Bash(curl -s -o /dev/null -w \"robots:%{http_code}\\\\n\" \"http://localhost:5173/robots.txt\")",
+      "Bash(curl -s -o /dev/null -w \"sitemap:%{http_code}\\\\n\" \"http://localhost:5173/sitemap.xml\")",
+      "Bash(curl -s -o /dev/null -w \"ogimage:%{http_code}\\\\n\" \"http://localhost:5173/og-image.png\")"
     ]
   }
 }

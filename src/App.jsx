@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import { HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from './context/ThemeContext'
 import { LanguageProvider } from './context/LanguageContext'
 import Navbar from './components/Navbar'
@@ -35,17 +36,19 @@ function AnimatedRoutes() {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <Navbar />
-          <main>
-            <AnimatedRoutes />
-          </main>
-          <Footer />
-        </BrowserRouter>
-      </LanguageProvider>
-    </ThemeProvider>
+    <HelmetProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <Navbar />
+            <main>
+              <AnimatedRoutes />
+            </main>
+            <Footer />
+          </BrowserRouter>
+        </LanguageProvider>
+      </ThemeProvider>
+    </HelmetProvider>
   )
 }

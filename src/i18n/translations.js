@@ -86,6 +86,13 @@ export const translations = {
       parts:        { name: 'Запчасти',    blurb: 'Запчасти для грузовиков и тяжёлой техники.' },
     },
     unit: { parts: 'запчастей' },
+    seo: {
+      keywords: 'запчасти для грузовиков, запчасти для тяжёлой техники, грузовые запчасти, двигатель, трансмиссия, тормоза, фильтры, GlobalAutoBusiness',
+      home: { title: 'GlobalAutoBusiness — Запчасти для грузовиков и тяжёлой техники', desc: 'Премиальные запчасти для грузовиков и тяжёлой техники: двигатель, трансмиссия, тормоза, электрика, фильтры. Оригинальное качество, доставка по всему миру, поддержка 24/7.' },
+      shop: { title: 'Магазин запчастей — GlobalAutoBusiness', desc: 'Каталог сертифицированных запчастей для грузовиков и тяжёлой техники. Фильтры по категориям, поиск и быстрая доставка по всему миру.' },
+      products: { title: 'Все товары — Каталог запчастей | GlobalAutoBusiness', desc: 'Полный каталог запчастей для грузовой и тяжёлой техники. Тысячи позиций, оригинальное качество и глобальная доставка.' },
+      contact: { title: 'Контакты — GlobalAutoBusiness', desc: 'Свяжитесь с GlobalAutoBusiness: подбор запчастей, оптовые заказы, поддержка 24/7. Телефон, email и локация на карте.' },
+    },
   },
 
   en: {
@@ -159,6 +166,13 @@ export const translations = {
       parts:        { name: 'Parts',         blurb: 'Spare parts for trucks and heavy vehicles.' },
     },
     unit: { parts: 'parts' },
+    seo: {
+      keywords: 'truck spare parts, heavy vehicle parts, commercial truck parts, engine, transmission, brakes, filters, GlobalAutoBusiness',
+      home: { title: 'GlobalAutoBusiness — Truck & Heavy Vehicle Spare Parts', desc: 'Premium spare parts for trucks and heavy vehicles: engine, transmission, brakes, electrical, filters. Genuine quality, worldwide shipping, 24/7 support.' },
+      shop: { title: 'Spare Parts Shop — GlobalAutoBusiness', desc: 'Browse certified spare parts for trucks and heavy vehicles. Filter by category, search, and fast global delivery.' },
+      products: { title: 'All Products — Parts Catalog | GlobalAutoBusiness', desc: 'The complete spare-parts catalog for trucks and heavy vehicles. Thousands of items, genuine quality and global shipping.' },
+      contact: { title: 'Contact — GlobalAutoBusiness', desc: 'Get in touch with GlobalAutoBusiness: part sourcing, bulk orders, 24/7 support. Phone, email and map location.' },
+    },
   },
 
   uz: {
@@ -232,5 +246,12 @@ export const translations = {
       parts:        { name: 'Qismlar',           blurb: 'Yuk mashinalar va og‘ir texnika uchun qismlar.' },
     },
     unit: { parts: 'qism' },
+    seo: {
+      keywords: 'yuk mashina ehtiyot qismlari, og‘ir texnika qismlari, gruzovoy qismlar, dvigatel, transmissiya, tormoz, filtr, GlobalAutoBusiness',
+      home: { title: 'GlobalAutoBusiness — Yuk mashina va og‘ir texnika qismlari', desc: 'Yuk mashinalar va og‘ir texnika uchun premium ehtiyot qismlar: dvigatel, transmissiya, tormoz, elektr, filtrlar. Original sifat, butun dunyoga yetkazish, 24/7 qo‘llab-quvvatlash.' },
+      shop: { title: 'Ehtiyot qismlar do‘koni — GlobalAutoBusiness', desc: 'Yuk mashinalar uchun sertifikatlangan qismlar katalogi. Kategoriyalar bo‘yicha filtr, qidiruv va tez yetkazib berish.' },
+      products: { title: 'Barcha mahsulotlar — Qismlar katalogi | GlobalAutoBusiness', desc: 'Yuk mashinalar va og‘ir texnika uchun to‘liq ehtiyot qismlar katalogi. Minglab mahsulot, original sifat va global yetkazish.' },
+      contact: { title: 'Aloqa — GlobalAutoBusiness', desc: 'GlobalAutoBusiness bilan bog‘laning: qism topish, ulgurji buyurtma, 24/7 yordam. Telefon, email va xaritadagi manzil.' },
+    },
   },
 }

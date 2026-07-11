@@ -3,6 +3,7 @@ import PageWrapper from '../components/PageWrapper'
 import Reveal from '../components/Reveal'
 import { Icon } from '../components/Icons'
 import { useLang } from '../context/LanguageContext'
+import Seo from '../components/Seo'
 
 const channels = [
   {
@@ -43,6 +44,7 @@ export default function Contact() {
 
   return (
     <PageWrapper>
+      <Seo title={t('seo.contact.title')} description={t('seo.contact.desc')} canonicalPath="/contact" />
       {/* Header */}
       <section style={{ paddingTop: 140, paddingBottom: 50, borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
         <div className="container">

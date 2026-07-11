@@ -7,6 +7,7 @@ import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
 import { getCategories, getProducts } from '../api/client'
 import { useLang } from '../context/LanguageContext'
+import Seo from '../components/Seo'
 
 const sorts = [
   { id: 'featured', key: 'featured' },
@@ -65,6 +66,7 @@ export default function Shop() {
 
   return (
     <PageWrapper>
+      <Seo title={t('seo.shop.title')} description={t('seo.shop.desc')} canonicalPath="/shop" />
       {/* Header */}
       <section style={{ paddingTop: 140, paddingBottom: 40, borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
         <div className="container">

@@ -1,0 +1,13 @@
+{
+  "name": "GlobalAutoBusiness — Truck & Heavy Vehicle Spare Parts",
+  "short_name": "GlobalAutoBusiness",
+  "description": "Premium spare parts for trucks and heavy vehicles.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1F5B",
+  "theme_color": "#0B1F5B",
+  "lang": "ru",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -7,6 +7,7 @@ import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
 import { fetchProductsPage } from '../api/client'
 import { useLang } from '../context/LanguageContext'
+import Seo from '../components/Seo'
 
 const PER_PAGE = 50 // har sahifada 50 ta card
 
@@ -101,6 +102,11 @@ export default function Products() {
 
   return (
     <PageWrapper>
+      <Seo
+        title={t('seo.products.title')}
+        description={t('seo.products.desc')}
+        canonicalPath={page > 1 ? `/products?page=${page}` : '/products'}
+      />
       {/* Header */}
       <section style={{ paddingTop: 140, paddingBottom: 44, borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
         <div className="container">
