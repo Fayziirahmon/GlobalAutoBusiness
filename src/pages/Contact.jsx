@@ -4,6 +4,7 @@ import Reveal from '../components/Reveal'
 import { Icon } from '../components/Icons'
 import { useLang } from '../context/LanguageContext'
 import Seo from '../components/Seo'
+import { addMessage } from '../admin/store'
 
 const channels = [
   {
@@ -30,8 +31,10 @@ export default function Contact() {
     e.preventDefault()
     setStatus('sending')
     const payload = { ...form, subject: subjects[form.subjectIdx] }
+    // Save locally so the message shows up in the admin panel (works
+    // without a backend). Also POST to the placeholder API for later.
+    addMessage({ name: payload.name, email: payload.email, company: payload.company, subject: payload.subject, message: payload.message })
     try {
-      // Placeholder endpoint — developer wires the real backend later.
       await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

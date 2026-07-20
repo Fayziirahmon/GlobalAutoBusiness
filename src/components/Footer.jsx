@@ -2,40 +2,33 @@ import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { useLang } from '../context/LanguageContext'
 import { Icon } from './Icons'
+import { catName } from '../data/categories'
 
-const cols = [
-  {
-    titleKey: 'footer.catalog',
-    items: [
-      { k: 'cat.engine.name', p: '/shop?category=engine' },
-      { k: 'cat.transmission.name', p: '/shop?category=transmission' },
-      { k: 'cat.suspension.name', p: '/shop?category=suspension' },
-      { k: 'cat.brakes.name', p: '/shop?category=brakes' },
-    ],
-  },
-  {
-    titleKey: 'footer.company',
-    items: [
-      { k: 'footer.shopAll', p: '/shop' },
-      { k: 'footer.featured', p: '/shop' },
-      { k: 'cat.electrical.name', p: '/shop?category=electrical' },
-      { k: 'cat.filters.name', p: '/shop?category=filters' },
-    ],
-  },
-  {
-    titleKey: 'footer.support',
-    items: [
-      { k: 'footer.contactUs', p: '/contact' },
-      { k: 'footer.shipping', p: '/contact' },
-      { k: 'footer.bulk', p: '/contact' },
-      { k: 'footer.findPart', p: '/contact' },
-    ],
-  },
+// Category links use ids from src/data/categories.js (label localized via catName).
+const catCol = ['engines', 'fuel-systems', 'filters', 'brakes', 'electrical']
+const navCol = [
+  { k: 'footer.shopAll', p: '/products' },
+  { k: 'nav.catalog', p: '/catalog' },
+  { cat: 'gearboxes' },
+  { cat: 'wheels-tires' },
+  { cat: 'special-machinery' },
+]
+const supportCol = [
+  { k: 'footer.contactUs', p: '/contact' },
+  { k: 'footer.shipping', p: '/contact' },
+  { k: 'footer.bulk', p: '/contact' },
+  { k: 'footer.findPart', p: '/contact' },
 ]
 
 export default function Footer() {
   const { isDark } = useTheme()
-  const { t } = useLang()
+  const { t, lang } = useLang()
+
+  const linkStyle = { color: 'var(--text3)', fontSize: 13.5, transition: 'color 0.2s', display: 'block' }
+  const hoverIn = (e) => { e.target.style.color = 'var(--text)' }
+  const hoverOut = (e) => { e.target.style.color = 'var(--text3)' }
+  const catLink = (id) => ({ label: catName(id, lang), p: `/products?category=${id}` })
+  const navLink = (it) => (it.cat ? catLink(it.cat) : { label: t(it.k), p: it.p })
   return (
     <footer style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)' }}>
       <div className="container">
@@ -44,12 +37,11 @@ export default function Footer() {
           <div>
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 20 }}>
               <div style={{
-                width: 36, height: 36, borderRadius: 9,
-                background: 'var(--accent)', color: 'var(--accent-fg)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 42, height: 42, borderRadius: 10, overflow: 'hidden',
+                background: '#fff', border: '1px solid var(--border)',
                 boxShadow: isDark ? '0 0 22px var(--glow)' : 'none',
               }}>
-                <Icon name="box" size={19} />
+                <img src="/logo.jpg" alt="GlobalAutoBusiness" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div style={{ lineHeight: 1.05 }}>
                 <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 16, letterSpacing: '-0.4px' }}>
@@ -78,22 +70,47 @@ export default function Footer() {
             </div>
           </div>
 
-          {cols.map((col) => (
-            <div key={col.titleKey}>
-              <h4 style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '1.4px', marginBottom: 20 }}>{t(col.titleKey)}</h4>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 13 }}>
-                {col.items.map((item, i) => (
-                  <li key={item.k + i}>
-                    <Link to={item.p} style={{ color: 'var(--text3)', fontSize: 13.5, transition: 'color 0.2s', display: 'block' }}
-                      onMouseEnter={(e) => { e.target.style.color = 'var(--text)' }}
-                      onMouseLeave={(e) => { e.target.style.color = 'var(--text3)' }}>
-                      {t(item.k)}
-                    </Link>
+          {/* Catalog column (categories) */}
+          <div>
+            <h4 style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '1.4px', marginBottom: 20 }}>{t('footer.catalog')}</h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 13 }}>
+              {catCol.map((id) => {
+                const l = catLink(id)
+                return (
+                  <li key={id}>
+                    <Link to={l.p} style={linkStyle} onMouseEnter={hoverIn} onMouseLeave={hoverOut}>{l.label}</Link>
                   </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+                )
+              })}
+            </ul>
+          </div>
+
+          {/* Navigation column */}
+          <div>
+            <h4 style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '1.4px', marginBottom: 20 }}>{t('footer.company')}</h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 13 }}>
+              {navCol.map((it, i) => {
+                const l = navLink(it)
+                return (
+                  <li key={i}>
+                    <Link to={l.p} style={linkStyle} onMouseEnter={hoverIn} onMouseLeave={hoverOut}>{l.label}</Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+
+          {/* Support column */}
+          <div>
+            <h4 style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '1.4px', marginBottom: 20 }}>{t('footer.support')}</h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 13 }}>
+              {supportCol.map((it, i) => (
+                <li key={i}>
+                  <Link to={it.p} style={linkStyle} onMouseEnter={hoverIn} onMouseLeave={hoverOut}>{t(it.k)}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Support banner */}

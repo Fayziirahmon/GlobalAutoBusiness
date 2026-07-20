@@ -16,14 +16,25 @@ export const LANGS = [
 
 export const translations = {
   ru: {
-    nav: { home: 'Главная', shop: 'Магазин', products: 'Товары', contact: 'Контакты', browse: 'Каталог', browseAll: 'Смотреть все запчасти', tagline: 'Запчасти для грузовиков' },
+    nav: { home: 'Главная', catalog: 'Каталог', products: 'Все товары', contact: 'Контакты', browse: 'Смотреть товары', browseAll: 'Смотреть все запчасти', tagline: 'Запчасти для грузовиков' },
+    catalogPage: { badge: 'Каталог запчастей', title: 'Каталог', subtitle: 'Выберите категорию запчастей для грузовиков, тяжёлой и специальной техники.' },
     hero: {
       badge: 'Премиальные запчасти для грузовой техники',
       subtitle: 'Премиальные запчасти для грузовиков и тяжёлой техники — качество, сертификация и доставка по всему миру.',
       browse: 'Смотреть каталог', contact: 'Связаться', scroll: 'Листайте',
+      searchPh: 'Введите артикул или название детали', searchBtn: 'Найти',
+    },
+    brands: { title: 'Работаем с оригинальными брендами' },
+    how: {
+      badge: 'Как мы работаем', title: 'Четыре шага до нужной детали.',
+      subtitle: 'Простой процесс — от запроса до отгрузки. Без лишней переписки и ожидания.',
+      s1t: 'Отправьте артикул', s1d: 'Напишите номер детали, модель техники или пришлите фото.',
+      s2t: 'Подберём и подтвердим', s2d: 'Проверим наличие, аналоги и цену — ответим в течение часа.',
+      s3t: 'Отгрузим со склада', s3d: 'Отправка в день оплаты, доставка по СНГ с отслеживанием.',
+      s4t: 'Поддержим после продажи', s4d: 'Гарантия на детали и помощь с подбором и установкой.',
     },
     stats: { inStock: 'Запчастей в наличии', countries: 'Стран обслуживания', support: 'Поддержка', onTime: 'Своевременная отгрузка' },
-    catsec: { badge: 'По категориям', title: 'Все системы в одном каталоге.', subtitle: 'От двигателя до электрики и фильтров — точные запчасти для грузовиков и тяжёлой техники, удобно сгруппированные.' },
+    catsec: { badge: 'По категориям', title: 'Все системы в одном каталоге.', subtitle: 'От двигателя до электрики и фильтров — точные запчасти для грузовиков и тяжёлой техники, удобно сгруппированные.', viewAll: 'Все категории' },
     featured: { badge: 'Популярное', title: 'Хиты продаж' },
     trust: {
       badge: 'Почему мы', title: 'Создано для профессионалов.',
@@ -45,16 +56,16 @@ export const translations = {
     products: {
       badge: 'Живой каталог', title: 'Все товары',
       subtitle: 'Полный каталог запчастей напрямую из API GlobalAutoBusiness — по 50 товаров на странице.',
-      range: '{a}–{b} из {total} запчастей', pageOf: 'Страница {p} из {t}',
+      range: '{a}–{b} из {total} запчастей', pageOf: 'Страница {p} из {t}', allProducts: 'Все товары',
       empty: 'Товаров пока нет', emptySub: 'Добавьте товары в API, чтобы они появились здесь.',
       error: 'Не удалось загрузить товары', errorSub: 'Пожалуйста, попробуйте позже.',
     },
     pd: {
       home: 'Главная', shop: 'Магазин', inStock: 'В наличии', outOfStock: 'Нет в наличии',
       reviews: 'отзывов', exclTax: 'без налога и доставки', addToOrder: 'В заказ', bulkQuote: 'Запросить оптовую цену',
-      sku: 'Артикул', brand: 'Бренд', category: 'Категория', availability: 'Наличие', inStockN: '{n} в наличии',
+      sku: 'Артикул', brand: 'Бренд', category: 'Категория', cross: 'Кросс-номера', availability: 'Наличие', inStockN: '{n}+ в наличии',
       relBadge: 'Похожие запчасти', relTitle: 'Вам также может понадобиться',
-      g1: 'Быстрая доставка по миру', g2: 'Оригинал с гарантией', g3: 'Поддержка 24/7',
+      g1: 'Быстрая доставка по СНГ', g2: 'Оригинал с гарантией', g3: 'Поддержка 24/7',
       notFound: 'Деталь не найдена', notFoundSub: 'Возможно, деталь перемещена или снята с продажи.', back: 'Назад в магазин',
     },
     contact: {
@@ -91,19 +102,31 @@ export const translations = {
       home: { title: 'GlobalAutoBusiness — Запчасти для грузовиков и тяжёлой техники', desc: 'Премиальные запчасти для грузовиков и тяжёлой техники: двигатель, трансмиссия, тормоза, электрика, фильтры. Оригинальное качество, доставка по всему миру, поддержка 24/7.' },
       shop: { title: 'Магазин запчастей — GlobalAutoBusiness', desc: 'Каталог сертифицированных запчастей для грузовиков и тяжёлой техники. Фильтры по категориям, поиск и быстрая доставка по всему миру.' },
       products: { title: 'Все товары — Каталог запчастей | GlobalAutoBusiness', desc: 'Полный каталог запчастей для грузовой и тяжёлой техники. Тысячи позиций, оригинальное качество и глобальная доставка.' },
+      catalog: { title: 'Каталог запчастей — GlobalAutoBusiness', desc: 'Каталог по категориям: двигатели, топливные системы, фильтры, КПП, тормоза, электрика, гидравлика и запчасти для спецтехники.' },
       contact: { title: 'Контакты — GlobalAutoBusiness', desc: 'Свяжитесь с GlobalAutoBusiness: подбор запчастей, оптовые заказы, поддержка 24/7. Телефон, email и локация на карте.' },
     },
   },
 
   en: {
-    nav: { home: 'Home', shop: 'Shop', products: 'Products', contact: 'Contact', browse: 'Browse Parts', browseAll: 'Browse All Parts', tagline: 'Truck Spare Parts' },
+    nav: { home: 'Home', catalog: 'Catalog', products: 'All Products', contact: 'Contact', browse: 'Browse Parts', browseAll: 'Browse All Parts', tagline: 'Truck Spare Parts' },
+    catalogPage: { badge: 'Parts catalog', title: 'Catalog', subtitle: 'Choose a category of spare parts for trucks, heavy and special vehicles.' },
     hero: {
       badge: 'Premium Heavy-Vehicle Parts',
       subtitle: 'Premium Truck & Heavy Vehicle Spare Parts — engineered, certified, and shipped worldwide.',
       browse: 'Browse Parts', contact: 'Contact Us', scroll: 'Scroll',
+      searchPh: 'Enter a part number or name', searchBtn: 'Search',
+    },
+    brands: { title: 'We work with genuine brands' },
+    how: {
+      badge: 'How we work', title: 'Four steps to the right part.',
+      subtitle: 'A simple process — from request to dispatch. No back-and-forth, no waiting.',
+      s1t: 'Send us the part number', s1d: 'Share the part number, machine model, or simply a photo.',
+      s2t: 'We source and confirm', s2d: 'We check stock, alternatives and price — and reply within an hour.',
+      s3t: 'We ship from stock', s3d: 'Dispatch on the day of payment, delivery across the CIS with tracking.',
+      s4t: 'After-sales support', s4d: 'Warranty on parts plus help with selection and fitting.',
     },
     stats: { inStock: 'Parts in stock', countries: 'Countries served', support: 'Expert support', onTime: 'On-time dispatch' },
-    catsec: { badge: 'Shop by category', title: 'Every system, one catalog.', subtitle: 'From engine internals to electrical and filtration — find precision parts for trucks and heavy vehicles, organized the way mechanics think.' },
+    catsec: { badge: 'Shop by category', title: 'Every system, one catalog.', subtitle: 'From engine internals to electrical and filtration — find precision parts for trucks and heavy vehicles, organized the way mechanics think.', viewAll: 'View all categories' },
     featured: { badge: 'Featured', title: 'Best-selling parts' },
     trust: {
       badge: 'Why choose us', title: 'Built for professionals.',
@@ -125,16 +148,16 @@ export const translations = {
     products: {
       badge: 'Live catalog', title: 'All Products',
       subtitle: 'Our complete parts catalog, served live from the GlobalAutoBusiness API — 50 products per page.',
-      range: '{a}–{b} of {total} parts', pageOf: 'Page {p} of {t}',
+      range: '{a}–{b} of {total} parts', pageOf: 'Page {p} of {t}', allProducts: 'All Products',
       empty: 'No products yet', emptySub: 'Add products to your API to see them appear here.',
       error: "Couldn't load products", errorSub: 'Please try again in a moment.',
     },
     pd: {
       home: 'Home', shop: 'Shop', inStock: 'In stock', outOfStock: 'Out of stock',
       reviews: 'reviews', exclTax: 'excl. tax & shipping', addToOrder: 'Add to Order', bulkQuote: 'Request a Bulk Quote',
-      sku: 'SKU', brand: 'Brand', category: 'Category', availability: 'Availability', inStockN: '{n} in stock',
+      sku: 'SKU', brand: 'Brand', category: 'Category', cross: 'Cross references', availability: 'Availability', inStockN: '{n}+ in stock',
       relBadge: 'Related parts', relTitle: 'You may also need',
-      g1: 'Fast global shipping', g2: 'Genuine, warranty-backed', g3: '24/7 part support',
+      g1: 'Fast delivery across the CIS', g2: 'Genuine, warranty-backed', g3: '24/7 part support',
       notFound: 'Part not found', notFoundSub: 'The part you are looking for may have been moved or is out of catalog.', back: 'Back to Shop',
     },
     contact: {
@@ -171,19 +194,31 @@ export const translations = {
       home: { title: 'GlobalAutoBusiness — Truck & Heavy Vehicle Spare Parts', desc: 'Premium spare parts for trucks and heavy vehicles: engine, transmission, brakes, electrical, filters. Genuine quality, worldwide shipping, 24/7 support.' },
       shop: { title: 'Spare Parts Shop — GlobalAutoBusiness', desc: 'Browse certified spare parts for trucks and heavy vehicles. Filter by category, search, and fast global delivery.' },
       products: { title: 'All Products — Parts Catalog | GlobalAutoBusiness', desc: 'The complete spare-parts catalog for trucks and heavy vehicles. Thousands of items, genuine quality and global shipping.' },
+      catalog: { title: 'Parts Catalog — GlobalAutoBusiness', desc: 'Browse by category: engines, fuel systems, filters, gearboxes, brakes, electrical, hydraulics and special-machinery parts.' },
       contact: { title: 'Contact — GlobalAutoBusiness', desc: 'Get in touch with GlobalAutoBusiness: part sourcing, bulk orders, 24/7 support. Phone, email and map location.' },
     },
   },
 
   uz: {
-    nav: { home: 'Bosh sahifa', shop: 'Do‘kon', products: 'Mahsulotlar', contact: 'Aloqa', browse: 'Katalog', browseAll: 'Barcha qismlarni ko‘rish', tagline: 'Yuk mashina qismlari' },
+    nav: { home: 'Bosh sahifa', catalog: 'Katalog', products: 'Barcha mahsulotlar', contact: 'Aloqa', browse: 'Mahsulotlar', browseAll: 'Barcha qismlarni ko‘rish', tagline: 'Yuk mashina qismlari' },
+    catalogPage: { badge: 'Qismlar katalogi', title: 'Katalog', subtitle: 'Yuk mashinalar, og‘ir va maxsus texnika uchun qism toifasini tanlang.' },
     hero: {
       badge: 'Og‘ir texnika uchun premium qismlar',
       subtitle: 'Yuk mashinalar va og‘ir texnika uchun premium ehtiyot qismlar — sifat, sertifikat va butun dunyoga yetkazib berish.',
       browse: 'Katalogni ko‘rish', contact: 'Bog‘lanish', scroll: 'Pastga',
+      searchPh: 'Artikul yoki qism nomini kiriting', searchBtn: 'Qidirish',
+    },
+    brands: { title: 'Original brendlar bilan ishlaymiz' },
+    how: {
+      badge: 'Qanday ishlaymiz', title: 'Kerakli qismgacha to‘rt qadam.',
+      subtitle: 'Oddiy jarayon — so‘rovdan jo‘natishgacha. Ortiqcha yozishma va kutishsiz.',
+      s1t: 'Artikulni yuboring', s1d: 'Qism raqami, texnika modeli yoki shunchaki suratini yuboring.',
+      s2t: 'Topamiz va tasdiqlaymiz', s2d: 'Mavjudlik, analog va narxni tekshiramiz — bir soat ichida javob beramiz.',
+      s3t: 'Ombordan jo‘natamiz', s3d: 'To‘lov kuni jo‘natish, MDH bo‘ylab kuzatuv bilan yetkazish.',
+      s4t: 'Sotuvdan keyin qo‘llab-quvvatlash', s4d: 'Qismlarga kafolat, tanlash va o‘rnatishda yordam.',
     },
     stats: { inStock: 'Mavjud qismlar', countries: 'Davlatlar', support: 'Mutaxassis yordami', onTime: 'O‘z vaqtida jo‘natish' },
-    catsec: { badge: 'Kategoriyalar bo‘yicha', title: 'Barcha tizimlar bitta katalogda.', subtitle: 'Dvigatel ichki qismlaridan elektr va filtrlargacha — yuk mashinalar uchun aniq qismlar, mexaniklar uchun qulay tartibda.' },
+    catsec: { badge: 'Kategoriyalar bo‘yicha', title: 'Barcha tizimlar bitta katalogda.', subtitle: 'Dvigatel ichki qismlaridan elektr va filtrlargacha — yuk mashinalar uchun aniq qismlar, mexaniklar uchun qulay tartibda.', viewAll: 'Barcha kategoriyalar' },
     featured: { badge: 'Ommabop', title: 'Eng ko‘p sotilganlar' },
     trust: {
       badge: 'Nega biz', title: 'Professionallar uchun.',
@@ -205,16 +240,16 @@ export const translations = {
     products: {
       badge: 'Jonli katalog', title: 'Barcha mahsulotlar',
       subtitle: 'GlobalAutoBusiness API’dan to‘g‘ridan-to‘g‘ri to‘liq katalog — har sahifada 50 ta mahsulot.',
-      range: '{total} tadan {a}–{b}', pageOf: '{p}-sahifa, jami {t}',
+      range: '{total} tadan {a}–{b}', pageOf: '{p}-sahifa, jami {t}', allProducts: 'Barcha mahsulotlar',
       empty: 'Hozircha mahsulot yo‘q', emptySub: 'Bu yerda ko‘rish uchun API’ga mahsulot qo‘shing.',
       error: 'Mahsulotlarni yuklab bo‘lmadi', errorSub: 'Iltimos, birozdan so‘ng qayta urinib ko‘ring.',
     },
     pd: {
       home: 'Bosh sahifa', shop: 'Do‘kon', inStock: 'Mavjud', outOfStock: 'Mavjud emas',
       reviews: 'sharh', exclTax: 'soliq va yetkazishsiz', addToOrder: 'Buyurtmaga qo‘shish', bulkQuote: 'Ulgurji narx so‘rash',
-      sku: 'SKU', brand: 'Brend', category: 'Kategoriya', availability: 'Mavjudligi', inStockN: '{n} ta mavjud',
+      sku: 'SKU', brand: 'Brend', category: 'Kategoriya', cross: 'Kross-nomerlar', availability: 'Mavjudligi', inStockN: '{n}+ ta mavjud',
       relBadge: 'O‘xshash qismlar', relTitle: 'Sizga yana kerak bo‘lishi mumkin',
-      g1: 'Tez global yetkazish', g2: 'Kafolatli original', g3: '24/7 qo‘llab-quvvatlash',
+      g1: 'MDH bo‘ylab tez yetkazish', g2: 'Kafolatli original', g3: '24/7 qo‘llab-quvvatlash',
       notFound: 'Qism topilmadi', notFoundSub: 'Qism ko‘chirilgan yoki katalogdan chiqarilgan bo‘lishi mumkin.', back: 'Do‘konga qaytish',
     },
     contact: {
@@ -251,6 +286,7 @@ export const translations = {
       home: { title: 'GlobalAutoBusiness — Yuk mashina va og‘ir texnika qismlari', desc: 'Yuk mashinalar va og‘ir texnika uchun premium ehtiyot qismlar: dvigatel, transmissiya, tormoz, elektr, filtrlar. Original sifat, butun dunyoga yetkazish, 24/7 qo‘llab-quvvatlash.' },
       shop: { title: 'Ehtiyot qismlar do‘koni — GlobalAutoBusiness', desc: 'Yuk mashinalar uchun sertifikatlangan qismlar katalogi. Kategoriyalar bo‘yicha filtr, qidiruv va tez yetkazib berish.' },
       products: { title: 'Barcha mahsulotlar — Qismlar katalogi | GlobalAutoBusiness', desc: 'Yuk mashinalar va og‘ir texnika uchun to‘liq ehtiyot qismlar katalogi. Minglab mahsulot, original sifat va global yetkazish.' },
+      catalog: { title: 'Qismlar katalogi — GlobalAutoBusiness', desc: 'Kategoriya bo‘yicha: dvigatel, yoqilg‘i tizimlari, filtrlar, KPP, tormoz, elektr, gidravlika va maxsus texnika qismlari.' },
       contact: { title: 'Aloqa — GlobalAutoBusiness', desc: 'GlobalAutoBusiness bilan bog‘laning: qism topish, ulgurji buyurtma, 24/7 yordam. Telefon, email va xaritadagi manzil.' },
     },
   },

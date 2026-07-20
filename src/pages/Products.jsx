@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useMemo, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
 import Reveal from '../components/Reveal'
 import ProductCard from '../components/ProductCard'
@@ -7,18 +7,26 @@ import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
 import { fetchProductsPage } from '../api/client'
 import { useLang } from '../context/LanguageContext'
+import { catName } from '../data/categories'
 import Seo from '../components/Seo'
 
 const PER_PAGE = 50 // har sahifada 50 ta card
 
+const SORTS = [
+  { id: 'featured', key: 'featured' },
+  { id: 'price-asc', key: 'priceAsc' },
+  { id: 'price-desc', key: 'priceDesc' },
+  { id: 'rating', key: 'rating' },
+]
+
 function ProductSkeleton() {
   return (
     <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', background: 'var(--card)' }}>
-      <div className="skeleton" style={{ aspectRatio: '4 / 3', borderRadius: 0 }} />
-      <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div className="skeleton" style={{ height: 12, width: '40%' }} />
-        <div className="skeleton" style={{ height: 16, width: '85%' }} />
-        <div className="skeleton" style={{ height: 24, width: '50%', marginTop: 6 }} />
+      <div className="skeleton" style={{ aspectRatio: '1 / 1', borderRadius: 0 }} />
+      <div style={{ padding: 13, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div className="skeleton" style={{ height: 10, width: '40%' }} />
+        <div className="skeleton" style={{ height: 13, width: '85%' }} />
+        <div className="skeleton" style={{ height: 20, width: '50%', marginTop: 4 }} />
       </div>
     </div>
   )
@@ -73,14 +81,28 @@ function Pagination({ current, total, onGo }) {
 }
 
 export default function Products() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [searchParams, setSearchParams] = useSearchParams()
   const page = Math.max(1, parseInt(searchParams.get('page')) || 1)
+  const category = searchParams.get('category') || ''
+
+  // Bosh sahifadagi tez qidiruv /products?q=... ga yuboradi
+  const [query, setQuery] = useState(() => searchParams.get('q') || '')
+  const [sort, setSort] = useState('featured')
 
   const { data, loading, error } = useApi(
-    ({ signal }) => fetchProductsPage({ page, limit: PER_PAGE }, { signal }),
-    [page]
+    ({ signal }) => fetchProductsPage({ page, limit: PER_PAGE, category, q: query, sort }, { signal }),
+    [page, category, query, sort]
   )
+
+  // Filtering/sorting should return to page 1.
+  const resetPage = () => {
+    if (searchParams.has('page')) {
+      const next = new URLSearchParams(searchParams)
+      next.delete('page')
+      setSearchParams(next, { replace: true })
+    }
+  }
 
   const goTo = (p) => {
     const next = new URLSearchParams(searchParams)
@@ -100,28 +122,65 @@ export default function Products() {
     return t('products.range', { a: start, b: end, total })
   }, [page, total, t])
 
+  const heading = category ? catName(category, lang) : t('products.title')
+
   return (
     <PageWrapper>
       <Seo
-        title={t('seo.products.title')}
+        title={category ? `${heading} — GlobalAutoBusiness` : t('seo.products.title')}
         description={t('seo.products.desc')}
-        canonicalPath={page > 1 ? `/products?page=${page}` : '/products'}
+        canonicalPath={category ? `/products?category=${category}` : (page > 1 ? `/products?page=${page}` : '/products')}
       />
       {/* Header */}
       <section style={{ paddingTop: 140, paddingBottom: 44, borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
         <div className="container">
           <span className="badge"><span className="dot" /> {t('products.badge')}</span>
-          <h1 className="heading-xl" style={{ margin: '18px 0 16px' }}>{t('products.title')}</h1>
-          <p className="body-lg" style={{ maxWidth: 560 }}>
-            {t('products.subtitle')}
-          </p>
+          <h1 className="heading-xl" style={{ margin: '18px 0 16px' }}>{heading}</h1>
+          {category ? (
+            <Link to="/products" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>
+              <Icon name="arrow" size={15} style={{ transform: 'rotate(180deg)' }} /> {t('products.allProducts')}
+            </Link>
+          ) : (
+            <p className="body-lg" style={{ maxWidth: 560 }}>{t('products.subtitle')}</p>
+          )}
         </div>
       </section>
 
       <section className="section-sm">
         <div className="container">
+          {/* Search + sort */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 22 }}>
+            <div style={{ position: 'relative', flex: '1 1 260px', maxWidth: 420 }}>
+              <span style={{ position: 'absolute', left: 15, top: '50%', transform: 'translateY(-50%)', color: 'var(--text3)', display: 'flex' }}>
+                <Icon name="search" size={17} />
+              </span>
+              <input
+                value={query}
+                onChange={(e) => { setQuery(e.target.value); resetPage() }}
+                placeholder={t('shop.search')}
+                style={{ width: '100%', padding: '12px 14px 12px 42px', background: 'var(--bg2)', border: '1px solid var(--border2)', borderRadius: 10, fontSize: 14, color: 'var(--text)' }}
+              />
+              {query && (
+                <button onClick={() => { setQuery(''); resetPage() }} aria-label="Clear"
+                  style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', width: 28, height: 28, borderRadius: 8, background: 'transparent', color: 'var(--text3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  ✕
+                </button>
+              )}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginLeft: 'auto' }}>
+              <span className="caption" style={{ fontSize: 11 }}>{t('shop.sort')}</span>
+              <select
+                value={sort}
+                onChange={(e) => { setSort(e.target.value); resetPage() }}
+                style={{ padding: '11px 14px', background: 'var(--bg2)', border: '1px solid var(--border2)', borderRadius: 10, fontSize: 14, color: 'var(--text)', cursor: 'pointer' }}
+              >
+                {SORTS.map((s) => <option key={s.id} value={s.id}>{t(`sorts.${s.key}`)}</option>)}
+              </select>
+            </div>
+          </div>
+
           {/* Meta row */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 28 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
             <p style={{ color: 'var(--text3)', fontSize: 13.5 }}>
               {loading ? t('common.loading') : rangeLabel}
             </p>
@@ -132,7 +191,7 @@ export default function Products() {
 
           {/* Grid */}
           {loading ? (
-            <div className="grid-4">
+            <div className="product-grid">
               {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
             </div>
           ) : error ? (
@@ -148,7 +207,7 @@ export default function Products() {
             </div>
           ) : (
             <>
-              <div className="grid-4">
+              <div className="product-grid">
                 {products.map((p, i) => (
                   <Reveal key={p.id} delay={(i % 4) * 55}><ProductCard product={p} /></Reveal>
                 ))}

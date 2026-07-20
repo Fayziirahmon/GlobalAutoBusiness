@@ -39,6 +39,56 @@ const paths = {
   filters: (<>
     <path d="M4 4h16l-6 7v7l-4 2v-9z" />
   </>),
+  fuel: (<>
+    <path d="M12 3s6 6.4 6 10.2A6 6 0 016 13.2C6 9.4 12 3 12 3z" />
+  </>),
+  exhaust: (<>
+    <rect x="3" y="11" width="11" height="5" rx="2" />
+    <path d="M14 12l4-2v7l-4-2M19 8c1 .6 1 1.4 0 2M20.5 7c1.4.9 1.4 2.1 0 3" />
+  </>),
+  cog: (<>
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="2.4" />
+    <path d="M12 4v4M12 16v4M4 12h4M16 12h4" />
+  </>),
+  axle: (<>
+    <circle cx="6" cy="12" r="3" /><circle cx="18" cy="12" r="3" />
+    <path d="M9 12h6" />
+  </>),
+  driveshaft: (<>
+    <path d="M4 12h4M16 12h4" />
+    <circle cx="6" cy="12" r="2" /><circle cx="18" cy="12" r="2" />
+    <rect x="9" y="9.8" width="6" height="4.4" rx="1" />
+  </>),
+  gauge: (<>
+    <circle cx="12" cy="12" r="8" />
+    <path d="M12 12l4-2.5" />
+    <circle cx="12" cy="12" r="1" />
+    <path d="M12 4v1.5M20 12h-1.5M4 12h1.5" />
+  </>),
+  steering: (<>
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="2.4" />
+    <path d="M12 4v5.6M12.5 14.3c3.4.6 5.4 2 6.8 4M11.5 14.3c-3.4.6-5.4 2-6.8 4" />
+  </>),
+  wheel: (<>
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="4.6" />
+    <circle cx="12" cy="12" r="1.4" />
+  </>),
+  bearing: (<>
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="3.6" />
+    <circle cx="12" cy="4.6" r="0.7" /><circle cx="12" cy="19.4" r="0.7" />
+    <circle cx="4.6" cy="12" r="0.7" /><circle cx="19.4" cy="12" r="0.7" />
+  </>),
+  bolt: (<>
+    <path d="M9 3.5h6l3 5.2-3 5.2H9l-3-5.2z" />
+    <path d="M12 14v6.5" />
+  </>),
+  wrench: (<>
+    <path d="M15 5.5a3.6 3.6 0 00-1.2 6.9L5.5 20.7 3.3 18.5l8.3-8.3A3.6 3.6 0 0115 5.5z" />
+  </>),
 
   /* ── Trust / UI ── */
   truck: (<>

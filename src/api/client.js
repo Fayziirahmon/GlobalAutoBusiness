@@ -2,29 +2,28 @@
  * ─────────────────────────────────────────────────────────────
  *  API ABSTRACTION LAYER
  *
- *  Every data request in the app goes through this module. It uses
- *  the native fetch() API against placeholder REST endpoints:
+ *  Barcha ma'lumot so'rovlari shu moduldan o'tadi. Placeholder REST
+ *  endpointlar:
  *
  *      GET /api/categories
- *      GET /api/products            ?category=&q=&featured=
+ *      GET /api/products            ?page=&limit=&category=&q=&sort=
  *      GET /api/product/:id
  *
- *  Until the backend exists, requests gracefully fall back to the
- *  local mock data (see mockData.js). When the real API is live,
- *  set VITE_USE_MOCK=false (or remove the fallback) and the same
- *  function signatures keep working — no page changes required.
+ *  Backend tayyor bo'lmaguncha REAL katalogdan (src/data/products.js —
+ *  public/images dagi suratlardan tuzilgan) o'qiydi. Backend ishga
+ *  tushsa, VITE_USE_MOCK=false qo'ying — funksiya imzolari o'zgarmaydi.
  * ─────────────────────────────────────────────────────────────
  */
 
-import { products as mockProducts, categories as mockCategories } from './mockData'
-import { catalogProducts } from './catalogData'
+import { products as catalog } from '../data/products'
+import { categories as siteCategories } from '../data/categories'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api'
 
-// Force mock mode unless an explicit real backend is configured.
+// Haqiqiy backend aniq sozlanmaguncha lokal katalogdan o'qiymiz.
 const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false'
 
-const NETWORK_DELAY = 450 // simulate latency so loading states are visible
+const NETWORK_DELAY = 250 // loading holatini ko'rsatish uchun
 
 const wait = (ms) => new Promise((res) => setTimeout(res, ms))
 
@@ -38,141 +37,139 @@ async function request(path, { signal } = {}) {
   return res.json()
 }
 
-/*
- * The real backend (server/server.ts) stores products as
- * { _id, title, description, price, imageUrl }. The UI components
- * expect { id, name, price, image, ... }. `normalize` bridges the two
- * and is idempotent, so it safely passes mock data through unchanged.
- */
-/** Flatten a possibly-multilingual field to a searchable string. */
+/** Ko'p tilli maydonni qidiriladigan matnga aylantiradi. */
 const asText = (v) => (v == null ? '' : typeof v === 'string' ? v : Object.values(v).join(' '))
 
+/*
+ * Backend (server/server.ts) mahsulotni { _id, title, description, price,
+ * imageUrl } ko'rinishida saqlaydi. UI esa { id, name, image, ... } kutadi.
+ * `normalize` shu ikkisini bog'laydi; lokal katalogga ta'sir qilmaydi.
+ */
 function normalize(p = {}) {
   const id = p.id ?? p._id ?? ''
+  const images = p.images ?? (p.image || p.imageUrl ? [p.image ?? p.imageUrl] : [])
   return {
     id,
     name: p.name ?? p.title ?? 'Untitled part',
     price: Number(p.price) || 0,
-    image: p.image ?? p.imageUrl ?? '',
+    image: p.image ?? p.imageUrl ?? images[0] ?? '',
+    images,
     desc: p.desc ?? p.description ?? '',
-    brand: p.brand ?? 'GlobalAuto',
-    category: p.category ?? 'parts',
+    brand: p.brand ?? 'GlobalAutoBusiness',
+    category: p.category ?? 'special-machinery',
+    cross: p.cross ?? [],
     rating: p.rating ?? 4.8,
     reviews: p.reviews ?? 0,
-    stock: p.stock ?? 25,
+    stock: p.stock ?? 10,
     sku: p.sku ?? (id ? `GAB-${String(id).slice(-6).toUpperCase()}` : ''),
     featured: p.featured ?? false,
   }
 }
 
-/* ── Mock resolvers (used when USE_MOCK or the network fails) ── */
+/* ── Lokal katalog ustida filtr / saralash ─────────────────── */
 
-async function mockGetCategories() {
-  await wait(NETWORK_DELAY)
-  return mockCategories
-}
-
-async function mockGetProducts({ category, q, featured, limit } = {}) {
-  await wait(NETWORK_DELAY)
-  let list = [...mockProducts]
+function filterLocal({ category, q, featured } = {}) {
+  let list = [...catalog]
   if (category && category !== 'all') list = list.filter((p) => p.category === category)
   if (featured) list = list.filter((p) => p.featured)
   if (q) {
     const term = q.toLowerCase()
     list = list.filter(
       (p) =>
+        (p.search || '').includes(term) ||
         asText(p.name).toLowerCase().includes(term) ||
-        asText(p.sku).toLowerCase().includes(term) ||
-        asText(p.brand).toLowerCase().includes(term)
+        asText(p.sku).toLowerCase().includes(term)
     )
   }
-  if (limit) list = list.slice(0, limit)
   return list
 }
 
-async function mockGetProduct(id) {
-  await wait(NETWORK_DELAY)
-  const product = mockProducts.find((p) => p.id === id)
-  if (!product) throw new Error('Product not found')
-  const related = mockProducts
+function sortLocal(list, sort) {
+  switch (sort) {
+    case 'price-asc':  return [...list].sort((a, b) => a.price - b.price)
+    case 'price-desc': return [...list].sort((a, b) => b.price - a.price)
+    case 'rating':     return [...list].sort((a, b) => b.rating - a.rating)
+    case 'featured':   return [...list].sort((a, b) => Number(b.featured) - Number(a.featured))
+    default:           return list
+  }
+}
+
+/* ── Kategoriyalar (mahsulot soni bilan) ──────────────────── */
+
+function categoriesWithCounts() {
+  const counts = catalog.reduce((acc, p) => {
+    acc[p.category] = (acc[p.category] || 0) + 1
+    return acc
+  }, {})
+  return siteCategories.map((c) => ({ ...c, count: counts[c.id] || 0 }))
+}
+
+export async function getCategories(opts) {
+  if (USE_MOCK) {
+    await wait(NETWORK_DELAY)
+    return categoriesWithCounts()
+  }
+  try {
+    return await request('/categories', opts)
+  } catch (err) {
+    if (err.name === 'AbortError') throw err
+    console.warn('[api] categories — lokal katalogga qaytildi:', err.message)
+    return categoriesWithCounts()
+  }
+}
+
+/* ── Mahsulotlar ro'yxati (Home "featured" va h.k.) ────────── */
+
+export async function getProducts(params = {}, opts) {
+  if (USE_MOCK) {
+    await wait(NETWORK_DELAY)
+    let list = filterLocal(params)
+    if (params.limit) list = list.slice(0, params.limit)
+    return list
+  }
+  try {
+    const query = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v != null && v !== '')
+    ).toString()
+    const data = await request(`/products${query ? `?${query}` : ''}`, opts)
+    return (Array.isArray(data) ? data : data.products ?? []).map(normalize)
+  } catch (err) {
+    if (err.name === 'AbortError') throw err
+    console.warn('[api] products — lokal katalogga qaytildi:', err.message)
+    let list = filterLocal(params)
+    if (params.limit) list = list.slice(0, params.limit)
+    return list
+  }
+}
+
+/* ── Bitta mahsulot ────────────────────────────────────────── */
+
+const findLocal = (id) => catalog.find((p) => p.id === id) || null
+
+function withRelated(product) {
+  const related = catalog
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 3)
   return { ...product, related }
 }
 
-/* ── Public API (call these from pages) ──────────────────────── */
-
-export async function getCategories(opts) {
-  if (USE_MOCK) return mockGetCategories()
-  try {
-    return await request('/categories', opts)
-  } catch (err) {
-    if (err.name === 'AbortError') throw err
-    console.warn('[api] categories — falling back to mock:', err.message)
-    return mockGetCategories()
-  }
-}
-
-export async function getProducts(params = {}, opts) {
-  if (USE_MOCK) return mockGetProducts(params)
-  try {
-    const query = new URLSearchParams(
-      Object.entries(params).filter(([, v]) => v != null && v !== '')
-    ).toString()
-    return await request(`/products${query ? `?${query}` : ''}`, opts)
-  } catch (err) {
-    if (err.name === 'AbortError') throw err
-    console.warn('[api] products — falling back to mock:', err.message)
-    return mockGetProducts(params)
-  }
-}
-
-/** Look a product up in the local datasets (curated demo + large catalog). */
-function findLocal(id) {
-  return mockProducts.find((p) => p.id === id) || catalogProducts.find((p) => p.id === id) || null
-}
-
-function withLocalRelated(product) {
-  const pool = [...mockProducts, ...catalogProducts]
-  const related = pool.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
-  return { ...product, related }
-}
-
 export async function getProduct(id, opts) {
-  // Resolve local ids (demo "p-…" and catalog "gab-…") without the network.
-  // Anything else is treated as a real backend Mongo _id.
   const local = findLocal(id)
   if (local) {
     await wait(NETWORK_DELAY)
-    return withLocalRelated(local)
+    return withRelated(local)
   }
   return fetchProductById(id, opts)
 }
 
-/* ─────────────────────────────────────────────────────────────
- *  REAL BACKEND — paginated catalog (server/server.ts)
- *
- *  GET /api/products?page=1&limit=50
- *    → { products, currentPage, totalPages, totalProducts, limit }
- *  GET /api/products/:id
- *    → single product
- *
- *  Both always try the live API first (this is the user's own API)
- *  and fall back to paginated mock data so the UI still renders
- *  when the backend isn't running.
- * ───────────────────────────────────────────────────────────── */
+/* ── Sahifalangan katalog (Barcha mahsulotlar sahifasi) ────── */
 
-/** Paginate the large local catalog — used as an offline fallback. */
-function mockPage({ page = 1, limit = 50, q } = {}) {
-  let list = [...catalogProducts]
-  if (q) {
-    const term = q.toLowerCase()
-    list = list.filter((p) => asText(p.name).toLowerCase().includes(term) || asText(p.sku).toLowerCase().includes(term))
-  }
+function localPage({ page = 1, limit = 50, q, category, sort } = {}) {
+  const list = sortLocal(filterLocal({ category, q }), sort)
   const totalProducts = list.length
   const start = (page - 1) * limit
   return {
-    products: list.slice(start, start + limit).map(normalize),
+    products: list.slice(start, start + limit),
     currentPage: page,
     totalPages: Math.max(1, Math.ceil(totalProducts / limit)),
     totalProducts,
@@ -180,14 +177,18 @@ function mockPage({ page = 1, limit = 50, q } = {}) {
   }
 }
 
-/** Fetch one page of products (default 50 per page) from the backend. */
-export async function fetchProductsPage({ page = 1, limit = 50, q = '' } = {}, opts) {
+/** Bir sahifa mahsulot (default 50 ta). */
+export async function fetchProductsPage({ page = 1, limit = 50, q = '', category = '', sort = '' } = {}, opts) {
+  if (USE_MOCK) {
+    await wait(NETWORK_DELAY)
+    return localPage({ page, limit, q, category, sort })
+  }
   try {
     const params = new URLSearchParams({ page: String(page), limit: String(limit) })
     if (q) params.set('q', q)
+    if (category && category !== 'all') params.set('category', category)
+    if (sort) params.set('sort', sort)
     const data = await request(`/products?${params.toString()}`, opts)
-
-    // Backend already returns the paginated shape; normalize the items.
     return {
       products: (data.products ?? []).map(normalize),
       currentPage: data.currentPage ?? page,
@@ -197,17 +198,16 @@ export async function fetchProductsPage({ page = 1, limit = 50, q = '' } = {}, o
     }
   } catch (err) {
     if (err.name === 'AbortError') throw err
-    console.warn('[api] products page — falling back to mock:', err.message)
-    return mockPage({ page, limit, q })
+    console.warn('[api] products page — lokal katalogga qaytildi:', err.message)
+    return localPage({ page, limit, q, category, sort })
   }
 }
 
-/** Fetch a single backend product (+ a few related items). */
+/** Backenddan bitta mahsulot (Mongo _id bo'yicha). */
 export async function fetchProductById(id, opts) {
   try {
     const raw = await request(`/products/${id}`, opts)
     const product = normalize(raw)
-    // Backend has no category grouping, so pull a few others as "related".
     let related = []
     try {
       const first = await request('/products?page=1&limit=4', opts)
@@ -215,11 +215,11 @@ export async function fetchProductById(id, opts) {
         .map(normalize)
         .filter((p) => p.id !== product.id)
         .slice(0, 3)
-    } catch { /* related is optional */ }
+    } catch { /* related ixtiyoriy */ }
     return { ...product, related }
   } catch (err) {
     if (err.name === 'AbortError') throw err
-    console.warn('[api] product by id — falling back to mock:', err.message)
-    return mockGetProduct(id) // will throw "not found" if truly absent
+    console.warn('[api] product by id — topilmadi:', err.message)
+    throw err
   }
 }

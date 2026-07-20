@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /ravshfayzz
 
 Sitemap: https://globalautobusiness.uz/sitemap.xml

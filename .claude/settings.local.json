@@ -9,7 +9,12 @@
       "Bash(curl -s -o /dev/null -w \"video:%{http_code} size:%{size_download}\\\\n\" \"http://localhost:5173/hero.mp4\")",
       "Bash(curl -s -o /dev/null -w \"robots:%{http_code}\\\\n\" \"http://localhost:5173/robots.txt\")",
       "Bash(curl -s -o /dev/null -w \"sitemap:%{http_code}\\\\n\" \"http://localhost:5173/sitemap.xml\")",
-      "Bash(curl -s -o /dev/null -w \"ogimage:%{http_code}\\\\n\" \"http://localhost:5173/og-image.png\")"
+      "Bash(curl -s -o /dev/null -w \"ogimage:%{http_code}\\\\n\" \"http://localhost:5173/og-image.png\")",
+      "Bash(curl -s -o /dev/null -w \"admin-route:%{http_code}\\\\n\" \"http://localhost:5173/ravshfayzz\")",
+      "Bash(curl -s \"http://localhost:5173/robots.txt\")",
+      "Bash(grep -E \"\\\\\\\\\\\\\\\\src\\\\\\\\\\\\\\\\\")",
+      "Bash(grep -E \"\\\\\\\\\\\\\\\\src\\\\\\\\\\\\\\\\.*\\\\.\\(jsx|js\\)$\")",
+      "Bash(node --input-type=module -e ' *)"
     ]
   }
 }

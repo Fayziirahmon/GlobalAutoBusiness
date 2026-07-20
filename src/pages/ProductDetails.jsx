@@ -7,6 +7,7 @@ import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
 import { getProduct } from '../api/client'
 import { useLang } from '../context/LanguageContext'
+import { catName } from '../data/categories'
 import Seo from '../components/Seo'
 import { SITE_URL, SITE_NAME } from '../seo/seo.config'
 
@@ -29,9 +30,10 @@ function Loading() {
 
 export default function ProductDetails() {
   const { id } = useParams()
-  const { t, tl } = useLang()
+  const { t, tl, lang } = useLang()
   const { data: product, loading, error } = useApi(() => getProduct(id), [id])
   const [qty, setQty] = useState(1)
+  const [activeImg, setActiveImg] = useState(0)
 
   if (loading) return <PageWrapper><Loading /></PageWrapper>
 
@@ -42,7 +44,7 @@ export default function ProductDetails() {
         <div className="container" style={{ paddingTop: 180, paddingBottom: 160, textAlign: 'center' }}>
           <h1 className="heading-lg" style={{ marginBottom: 14 }}>{t('pd.notFound')}</h1>
           <p className="body-md" style={{ marginBottom: 28 }}>{t('pd.notFoundSub')}</p>
-          <Link to="/shop" className="btn btn-primary">{t('pd.back')} <Icon name="arrow" size={16} /></Link>
+          <Link to="/products" className="btn btn-primary">{t('pd.back')} <Icon name="arrow" size={16} /></Link>
         </div>
       </PageWrapper>
     )
@@ -51,7 +53,8 @@ export default function ProductDetails() {
   const inStock = product.stock > 0
   const title = tl(product.name)
   const descText = tl(product.desc)
-  const catLabel = t(`cat.${product.category}.name`, product.category)
+  const catLabel = catName(product.category, lang)
+  const imgs = product.images?.length ? product.images : [product.image].filter(Boolean)
 
   const productLd = {
     '@context': 'https://schema.org',
@@ -79,6 +82,7 @@ export default function ProductDetails() {
     { k: t('pd.sku'), v: product.sku },
     { k: t('pd.brand'), v: product.brand },
     { k: t('pd.category'), v: catLabel },
+    ...(product.cross?.length ? [{ k: t('pd.cross'), v: product.cross.join(', ') }] : []),
     { k: t('pd.availability'), v: inStock ? t('pd.inStockN', { n: product.stock }) : t('pd.outOfStock') },
   ]
 
@@ -97,9 +101,9 @@ export default function ProductDetails() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text3)' }}>
           <Link to="/" style={{ color: 'var(--text3)' }}>{t('pd.home')}</Link>
           <span>/</span>
-          <Link to="/shop" style={{ color: 'var(--text3)' }}>{t('pd.shop')}</Link>
+          <Link to="/products" style={{ color: 'var(--text3)' }}>{t('nav.products')}</Link>
           <span>/</span>
-          <Link to={`/shop?category=${product.category}`} style={{ color: 'var(--text3)' }}>{catLabel}</Link>
+          <Link to={`/products?category=${product.category}`} style={{ color: 'var(--text3)' }}>{catLabel}</Link>
           <span>/</span>
           <span style={{ color: 'var(--text)' }}>{title}</span>
         </div>
@@ -111,19 +115,27 @@ export default function ProductDetails() {
           <div className="detail-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'start' }}>
             {/* Gallery */}
             <Reveal style={{ position: 'sticky', top: 100 }}>
-              <div style={{ borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--border)', background: 'var(--bg3)', aspectRatio: '4 / 3' }}>
-                <img src={product.image} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--border)', background: '#fff', aspectRatio: '1 / 1' }}>
+                <img src={imgs[activeImg] ?? product.image} alt={title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginTop: 12 }}>
-                {[0, 1, 2, 3].map((i) => (
-                  <div key={i} style={{
-                    aspectRatio: '1', borderRadius: 12, overflow: 'hidden',
-                    border: `1px solid ${i === 0 ? 'var(--text)' : 'var(--border)'}`, background: 'var(--bg3)', cursor: 'pointer',
-                  }}>
-                    <img src={product.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: i === 0 ? 1 : 0.55 }} />
-                  </div>
-                ))}
-              </div>
+              {imgs.length > 1 && (
+                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(imgs.length, 5)}, 1fr)`, gap: 10, marginTop: 12 }}>
+                  {imgs.map((src, i) => (
+                    <button
+                      key={src}
+                      onClick={() => setActiveImg(i)}
+                      aria-label={`${title} — ${i + 1}`}
+                      style={{
+                        aspectRatio: '1', borderRadius: 10, overflow: 'hidden', padding: 0,
+                        border: `1.5px solid ${i === activeImg ? 'var(--text)' : 'var(--border)'}`,
+                        background: '#fff', cursor: 'pointer', transition: 'border-color 0.2s var(--ease)',
+                      }}
+                    >
+                      <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: i === activeImg ? 1 : 0.6 }} />
+                    </button>
+                  ))}
+                </div>
+              )}
             </Reveal>
 
             {/* Info */}
@@ -202,7 +214,7 @@ export default function ProductDetails() {
               <span className="badge"><span className="dot" /> {t('pd.relBadge')}</span>
               <h2 style={{ fontSize: 'clamp(26px, 3.4vw, 40px)' }}>{t('pd.relTitle')}</h2>
             </Reveal>
-            <div className="grid-3">
+            <div className="product-grid">
               {product.related.map((p, i) => (
                 <Reveal key={p.id} delay={i * 70}><ProductCard product={p} /></Reveal>
               ))}

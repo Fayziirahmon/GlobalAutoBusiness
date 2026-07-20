@@ -7,10 +7,14 @@ import { LanguageProvider } from './context/LanguageContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
-import Shop from './pages/Shop'
+import Catalog from './pages/Catalog'
 import Products from './pages/Products'
 import ProductDetails from './pages/ProductDetails'
 import Contact from './pages/Contact'
+import Admin from './pages/Admin'
+import { recordPageview } from './admin/store'
+
+const ADMIN_PATH = '/ravshfayzz'
 
 function ScrollToTop() {
   const { pathname, search } = useLocation()
@@ -24,13 +28,35 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
+        <Route path="/catalog" element={<Catalog />} />
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path={ADMIN_PATH} element={<Admin />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </AnimatePresence>
+  )
+}
+
+function Shell() {
+  const { pathname } = useLocation()
+  const isAdmin = pathname.startsWith(ADMIN_PATH)
+
+  // Record a page view on every route change (admin excluded).
+  useEffect(() => {
+    if (!isAdmin) recordPageview(pathname)
+  }, [pathname, isAdmin])
+
+  return (
+    <>
+      <ScrollToTop />
+      {!isAdmin && <Navbar />}
+      <main>
+        <AnimatedRoutes />
+      </main>
+      {!isAdmin && <Footer />}
+    </>
   )
 }
 
@@ -40,12 +66,7 @@ export default function App() {
       <ThemeProvider>
         <LanguageProvider>
           <BrowserRouter>
-            <ScrollToTop />
-            <Navbar />
-            <main>
-              <AnimatedRoutes />
-            </main>
-            <Footer />
+            <Shell />
           </BrowserRouter>
         </LanguageProvider>
       </ThemeProvider>

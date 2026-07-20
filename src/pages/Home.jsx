@@ -1,11 +1,15 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PageWrapper from '../components/PageWrapper'
 import Reveal from '../components/Reveal'
 import CategoryCard from '../components/CategoryCard'
 import ProductCard from '../components/ProductCard'
+import BrandMarquee from '../components/BrandMarquee'
+import CountUp from '../components/CountUp'
 import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
+import { useScrollProgress } from '../hooks/useScrollAnimation'
 import { getCategories, getProducts } from '../api/client'
 import { useLang } from '../context/LanguageContext'
 import Seo from '../components/Seo'
@@ -13,10 +17,17 @@ import Seo from '../components/Seo'
 const ease = [0.22, 1, 0.36, 1]
 
 const stats = [
-  { value: '12K+', key: 'inStock' },
-  { value: '60+', key: 'countries' },
-  { value: '24/7', key: 'support' },
-  { value: '99.4%', key: 'onTime' },
+  { to: 12, suffix: 'K+', key: 'inStock' },
+  { to: 60, suffix: '+', key: 'countries' },
+  { display: '24/7', key: 'support' },
+  { to: 99.4, decimals: 1, suffix: '%', key: 'onTime' },
+]
+
+const steps = [
+  { icon: 'search', t: 's1t', d: 's1d' },
+  { icon: 'check', t: 's2t', d: 's2d' },
+  { icon: 'truck', t: 's3t', d: 's3d' },
+  { icon: 'support', t: 's4t', d: 's4d' },
 ]
 
 const trust = [
@@ -29,6 +40,15 @@ const trust = [
 /* ── Hero with reserved background-video container ── */
 function Hero() {
   const { t } = useLang()
+  const navigate = useNavigate()
+  const [q, setQ] = useState('')
+
+  const submitSearch = (e) => {
+    e.preventDefault()
+    const term = q.trim()
+    navigate(term ? `/products?q=${encodeURIComponent(term)}` : '/products')
+  }
+
   return (
     <section style={{ position: 'relative', minHeight: '100svh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
       {/* Fallback dark background (shown if no video) */}
@@ -86,7 +106,7 @@ function Hero() {
           initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease, delay: 0.28 }}
           style={{ display: 'flex', gap: 14, marginTop: 40, flexWrap: 'wrap' }}
         >
-          <Link to="/shop" className="btn btn-lg" style={{ background: '#fff', color: '#0B1F5B' }}>
+          <Link to="/products" className="btn btn-lg" style={{ background: '#fff', color: '#0B1F5B' }}>
             {t('hero.browse')} <Icon name="arrow" size={17} />
           </Link>
           <Link to="/contact" className="btn btn-lg" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.28)', backdropFilter: 'blur(6px)' }}>
@@ -94,15 +114,46 @@ function Hero() {
           </Link>
         </motion.div>
 
+        {/* Tez qidiruv — artikul bo'yicha */}
+        <motion.form
+          onSubmit={submitSearch}
+          initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease, delay: 0.34 }}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 8, marginTop: 26,
+            maxWidth: 520, padding: 7, borderRadius: 14,
+            background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.22)',
+            backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+          }}
+        >
+          <span style={{ display: 'flex', color: 'rgba(255,255,255,0.65)', paddingLeft: 12 }}>
+            <Icon name="search" size={18} />
+          </span>
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder={t('hero.searchPh')}
+            aria-label={t('hero.searchPh')}
+            style={{
+              flex: 1, minWidth: 0, background: 'transparent', border: 'none',
+              color: '#fff', fontSize: 15, padding: '10px 4px',
+            }}
+          />
+          <button type="submit" className="btn" style={{ background: '#fff', color: '#0B1F5B', padding: '11px 22px', borderRadius: 9, flexShrink: 0 }}>
+            {t('hero.searchBtn')}
+          </button>
+        </motion.form>
+
         {/* Stat strip */}
         <motion.div
           initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease, delay: 0.4 }}
           className="hero-stats"
           style={{ display: 'grid', gridTemplateColumns: 'repeat(4, auto)', gap: 'clamp(28px, 6vw, 72px)', marginTop: 72, justifyContent: 'start' }}
         >
-          {stats.map((s) => (
+          {stats.map((s, i) => (
             <div key={s.key}>
-              <div style={{ fontFamily: 'Space Grotesk', fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 700, letterSpacing: '-1px', color: '#fff' }}>{s.value}</div>
+              <div style={{ fontFamily: 'Space Grotesk', fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 700, letterSpacing: '-1px', color: '#fff' }}>
+                {s.display ?? <CountUp to={s.to} decimals={s.decimals} suffix={s.suffix} delay={500 + i * 120} />}
+              </div>
               <div style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.6)', marginTop: 4, letterSpacing: '0.3px' }}>{t(`stats.${s.key}`)}</div>
             </div>
           ))}
@@ -126,9 +177,9 @@ function Hero() {
 function ProductSkeleton() {
   return (
     <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', background: 'var(--card)' }}>
-      <div className="skeleton" style={{ aspectRatio: '4 / 3', borderRadius: 0 }} />
-      <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div className="skeleton" style={{ height: 12, width: '40%' }} />
+      <div className="skeleton" style={{ aspectRatio: '1 / 1', borderRadius: 0 }} />
+      <div style={{ padding: 13, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div className="skeleton" style={{ height: 10, width: '40%' }} />
         <div className="skeleton" style={{ height: 16, width: '85%' }} />
         <div className="skeleton" style={{ height: 24, width: '50%', marginTop: 6 }} />
       </div>
@@ -138,13 +189,21 @@ function ProductSkeleton() {
 
 export default function Home() {
   const { t } = useLang()
+  const progress = useScrollProgress()
   const { data: categories } = useApi(() => getCategories())
   const { data: featured, loading: loadingFeatured } = useApi(() => getProducts({ featured: true, limit: 4 }))
 
   return (
     <PageWrapper>
       <Seo title={t('seo.home.title')} description={t('seo.home.desc')} canonicalPath="/" />
+
+      {/* Sahifa bo'ylab scroll indikatori */}
+      <div className="scroll-progress" style={{ width: `${progress * 100}%` }} />
+
       <Hero />
+
+      {/* Katalogdagi haqiqiy brendlar tasmasi */}
+      <BrandMarquee />
 
       {/* ── Categories ── */}
       <section className="section">
@@ -155,17 +214,21 @@ export default function Home() {
             <p>{t('catsec.subtitle')}</p>
           </Reveal>
 
-          <div className="grid-3">
-            {(categories ?? Array.from({ length: 6 })).map((cat, i) =>
+          <div className="category-grid">
+            {(categories ? categories.slice(0, 8) : Array.from({ length: 8 })).map((cat, i) =>
               cat ? (
-                <Reveal key={cat.id} delay={i * 70}>
+                <Reveal key={cat.id} delay={(i % 4) * 60}>
                   <CategoryCard category={cat} />
                 </Reveal>
               ) : (
-                <div key={i} className="skeleton" style={{ minHeight: 200, borderRadius: 'var(--radius-lg)' }} />
+                <div key={i} className="skeleton" style={{ minHeight: 160, borderRadius: 'var(--radius-lg)' }} />
               )
             )}
           </div>
+
+          <Reveal style={{ textAlign: 'center', marginTop: 40 }}>
+            <Link to="/catalog" className="btn btn-outline btn-lg">{t('catsec.viewAll')} <Icon name="arrow" size={17} /></Link>
+          </Reveal>
         </div>
       </section>
 
@@ -177,10 +240,10 @@ export default function Home() {
               <span className="badge" style={{ marginBottom: 22 }}><span className="dot" /> {t('featured.badge')}</span>
               <h2 style={{ fontSize: 'clamp(30px, 4.4vw, 52px)', fontWeight: 700, letterSpacing: '-1.4px' }}>{t('featured.title')}</h2>
             </div>
-            <Link to="/shop" className="btn btn-outline">{t('common.viewAll')} <Icon name="arrow" size={16} /></Link>
+            <Link to="/products" className="btn btn-outline">{t('common.viewAll')} <Icon name="arrow" size={16} /></Link>
           </Reveal>
 
-          <div className="grid-4">
+          <div className="product-grid">
             {loadingFeatured
               ? Array.from({ length: 4 }).map((_, i) => <ProductSkeleton key={i} />)
               : (featured ?? []).map((p, i) => (
@@ -190,8 +253,50 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Trust ── */}
+      {/* ── Как мы работаем ── */}
       <section className="section">
+        <div className="container">
+          <Reveal className="section-header center">
+            <span className="badge"><span className="dot" /> {t('how.badge')}</span>
+            <h2>{t('how.title')}</h2>
+            <p>{t('how.subtitle')}</p>
+          </Reveal>
+
+          <div className="grid-4" style={{ position: 'relative' }}>
+            {/* Qadamlarni bog'lovchi chiziq (faqat keng ekranda) */}
+            <div className="steps-line" style={{
+              position: 'absolute', top: 34, left: '12%', right: '12%', height: 1,
+              background: 'linear-gradient(90deg, transparent, var(--border2), var(--border2), transparent)',
+              pointerEvents: 'none',
+            }} />
+
+            {steps.map((s, i) => (
+              <Reveal key={s.t} delay={i * 90}>
+                <div className="step-card" style={{ position: 'relative', textAlign: 'center' }}>
+                  <div style={{
+                    width: 68, height: 68, borderRadius: '50%', margin: '0 auto 20px',
+                    background: 'var(--bg)', border: '1px solid var(--border2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: 'var(--text)', position: 'relative', zIndex: 1,
+                  }}>
+                    <Icon name={s.icon} size={26} />
+                  </div>
+                  <div className="step-card__num" style={{ marginBottom: 10 }}>{String(i + 1).padStart(2, '0')}</div>
+                  <h3 style={{ fontSize: 17, fontWeight: 600, letterSpacing: '-0.4px', marginBottom: 9 }}>{t(`how.${s.t}`)}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text3)', lineHeight: 1.65, maxWidth: 250, margin: '0 auto' }}>
+                    {t(`how.${s.d}`)}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <style>{`@media (max-width: 1024px){ .steps-line { display: none; } }`}</style>
+        </div>
+      </section>
+
+      {/* ── Trust ── */}
+      <section className="section" style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <Reveal className="section-header center">
             <span className="badge"><span className="dot" /> {t('trust.badge')}</span>
