@@ -14,7 +14,8 @@
       "Bash(curl -s \"http://localhost:5173/robots.txt\")",
       "Bash(grep -E \"\\\\\\\\\\\\\\\\src\\\\\\\\\\\\\\\\\")",
       "Bash(grep -E \"\\\\\\\\\\\\\\\\src\\\\\\\\\\\\\\\\.*\\\\.\\(jsx|js\\)$\")",
-      "Bash(node --input-type=module -e ' *)"
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./package.json'\\).scripts,null,2\\)\\)\")"
     ]
   }
 }

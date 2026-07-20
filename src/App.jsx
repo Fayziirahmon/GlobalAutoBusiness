@@ -29,6 +29,8 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
+        {/* Kategoriya landing sahifasi — SEO uchun toza URL */}
+        <Route path="/catalog/:slug" element={<Products />} />
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/contact" element={<Contact />} />

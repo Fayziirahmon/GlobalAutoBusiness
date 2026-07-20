@@ -25,6 +25,12 @@ export const translations = {
       searchPh: 'Введите артикул или название детали', searchBtn: 'Найти',
     },
     brands: { title: 'Работаем с оригинальными брендами' },
+    about: {
+      title: 'Запчасти и фильтры для грузовиков и спецтехники',
+      p1: 'GlobalAutoBusiness — поставщик запчастей для грузового транспорта и спецтехники в Узбекистане и странах СНГ. На складе — масляные, топливные и гидравлические фильтры, сепараторы топлива и расходники для планового ТО.',
+      p2: 'Мы работаем с оригинальными деталями и проверенными аналогами: Perkins, Caterpillar, Komatsu, Doosan, Hyundai, Yanmar, Isuzu, SANY, Shantui, SDLG, Yuchai, ZF, Hengst, Donaldson, Fleetguard, STAL и LANTU. Подбираем по артикулу, кросс-номеру или модели техники.',
+      p3: 'Нужен фильтр для экскаватора, погрузчика, самосвала или тягача? Пришлите артикул детали или фото — проверим наличие, предложим аналог и отправим со склада в день оплаты.',
+    },
     how: {
       badge: 'Как мы работаем', title: 'Четыре шага до нужной детали.',
       subtitle: 'Простой процесс — от запроса до отгрузки. Без лишней переписки и ожидания.',
@@ -117,6 +123,12 @@ export const translations = {
       searchPh: 'Enter a part number or name', searchBtn: 'Search',
     },
     brands: { title: 'We work with genuine brands' },
+    about: {
+      title: 'Spare parts and filters for trucks and heavy equipment',
+      p1: 'GlobalAutoBusiness supplies spare parts for trucks and heavy machinery across Uzbekistan and the CIS. In stock: oil, fuel and hydraulic filters, fuel/water separators and routine-service consumables.',
+      p2: 'We stock genuine parts and proven equivalents: Perkins, Caterpillar, Komatsu, Doosan, Hyundai, Yanmar, Isuzu, SANY, Shantui, SDLG, Yuchai, ZF, Hengst, Donaldson, Fleetguard, STAL and LANTU. We match by part number, cross reference or machine model.',
+      p3: 'Need a filter for an excavator, loader, dump truck or tractor unit? Send us the part number or a photo — we will check stock, suggest an equivalent and ship the same day payment clears.',
+    },
     how: {
       badge: 'How we work', title: 'Four steps to the right part.',
       subtitle: 'A simple process — from request to dispatch. No back-and-forth, no waiting.',
@@ -209,6 +221,12 @@ export const translations = {
       searchPh: 'Artikul yoki qism nomini kiriting', searchBtn: 'Qidirish',
     },
     brands: { title: 'Original brendlar bilan ishlaymiz' },
+    about: {
+      title: 'Yuk mashinalar va maxsus texnika uchun ehtiyot qismlar va filtrlar',
+      p1: 'GlobalAutoBusiness — O‘zbekiston va MDH davlatlarida yuk transporti hamda maxsus texnika uchun ehtiyot qismlar yetkazib beruvchi. Omborda: moy, yoqilg‘i va gidravlika filtrlari, yoqilg‘i separatorlari va rejali texnik xizmat uchun sarf materiallar.',
+      p2: 'Original qismlar va tekshirilgan analoglar bilan ishlaymiz: Perkins, Caterpillar, Komatsu, Doosan, Hyundai, Yanmar, Isuzu, SANY, Shantui, SDLG, Yuchai, ZF, Hengst, Donaldson, Fleetguard, STAL va LANTU. Artikul, kross-nomer yoki texnika modeli bo‘yicha tanlab beramiz.',
+      p3: 'Ekskavator, pogruzchik, samosval yoki tortuvchi uchun filtr kerakmi? Qism artikuli yoki suratini yuboring — mavjudligini tekshiramiz, analog taklif qilamiz va to‘lov kuni ombordan jo‘natamiz.',
+    },
     how: {
       badge: 'Qanday ishlaymiz', title: 'Kerakli qismgacha to‘rt qadam.',
       subtitle: 'Oddiy jarayon — so‘rovdan jo‘natishgacha. Ortiqcha yozishma va kutishsiz.',

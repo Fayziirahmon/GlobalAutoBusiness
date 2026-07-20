@@ -56,6 +56,24 @@ export default function ProductDetails() {
   const catLabel = catName(product.category, lang)
   const imgs = product.images?.length ? product.images : [product.image].filter(Boolean)
 
+  // Meta description: artikul + kross-nomerlar — aynan shular bo'yicha qidiriladi
+  const hasSku = product.sku && product.sku !== '—'
+  const skuSuffix = hasSku && !title.toLowerCase().includes(product.sku.toLowerCase()) ? ` ${product.sku}` : ''
+  const crossLine = product.cross?.length ? ` Кросс-номера: ${product.cross.join(', ')}.` : ''
+  const seoDesc = `${title}${hasSku ? `, артикул ${product.sku}` : ''}. ${product.brand}.${crossLine} В наличии, доставка по СНГ. ${descText}`.slice(0, 300)
+
+  // Breadcrumb JSON-LD — Google qidiruvda yo'lakchani ko'rsatadi
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: t('pd.home'), item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: t('nav.products'), item: `${SITE_URL}/products` },
+      { '@type': 'ListItem', position: 3, name: catLabel, item: `${SITE_URL}/catalog/${product.category}` },
+      { '@type': 'ListItem', position: 4, name: title, item: `${SITE_URL}/product/${product.id}` },
+    ],
+  }
+
   const productLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -89,12 +107,12 @@ export default function ProductDetails() {
   return (
     <PageWrapper>
       <Seo
-        title={`${title} — ${SITE_NAME}`}
-        description={descText}
+        title={`${title}${skuSuffix} купить — ${SITE_NAME}`.replace(/\s+/g, ' ')}
+        description={seoDesc}
         type="product"
         image={product.image}
         canonicalPath={`/product/${product.id}`}
-        jsonLd={productLd}
+        jsonLd={[productLd, breadcrumbLd]}
       />
       {/* Breadcrumb */}
       <div className="container" style={{ paddingTop: 110, paddingBottom: 8 }}>
@@ -103,7 +121,7 @@ export default function ProductDetails() {
           <span>/</span>
           <Link to="/products" style={{ color: 'var(--text3)' }}>{t('nav.products')}</Link>
           <span>/</span>
-          <Link to={`/products?category=${product.category}`} style={{ color: 'var(--text3)' }}>{catLabel}</Link>
+          <Link to={`/catalog/${product.category}`} style={{ color: 'var(--text3)' }}>{catLabel}</Link>
           <span>/</span>
           <span style={{ color: 'var(--text)' }}>{title}</span>
         </div>

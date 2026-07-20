@@ -27,7 +27,7 @@ export default function Footer() {
   const linkStyle = { color: 'var(--text3)', fontSize: 13.5, transition: 'color 0.2s', display: 'block' }
   const hoverIn = (e) => { e.target.style.color = 'var(--text)' }
   const hoverOut = (e) => { e.target.style.color = 'var(--text3)' }
-  const catLink = (id) => ({ label: catName(id, lang), p: `/products?category=${id}` })
+  const catLink = (id) => ({ label: catName(id, lang), p: `/catalog/${id}` })
   const navLink = (it) => (it.cat ? catLink(it.cat) : { label: t(it.k), p: it.p })
   return (
     <footer style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)' }}>

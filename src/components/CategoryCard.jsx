@@ -9,7 +9,7 @@ export default function CategoryCard({ category }) {
 
   return (
     <Link
-      to={`/products?category=${id}`}
+      to={`/catalog/${id}`}
       className="category-card"
       style={{
         position: 'relative',

@@ -324,6 +324,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── SEO matn bloki (kalit so'zlar bilan) ── */}
+      <section className="section-sm">
+        <div className="container">
+          <Reveal style={{ maxWidth: 860 }}>
+            <h2 style={{ fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 700, letterSpacing: '-0.8px', marginBottom: 22 }}>
+              {t('about.title')}
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {['p1', 'p2', 'p3'].map((k) => (
+                <p key={k} style={{ fontSize: 15.5, lineHeight: 1.8, color: 'var(--text2)' }}>
+                  {t(`about.${k}`)}
+                </p>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ── CTA band ── */}
       <section className="section-sm" style={{ paddingBottom: 130 }}>
         <div className="container">

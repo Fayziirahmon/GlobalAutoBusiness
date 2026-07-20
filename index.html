@@ -47,18 +47,45 @@
         "@context": "https://schema.org",
         "@graph": [
           {
-            "@type": "Organization",
+            "@type": ["Organization", "AutoPartsStore"],
             "@id": "https://globalautobusiness.uz/#organization",
             "name": "GlobalAutoBusiness",
+            "alternateName": "Глобал Авто Бизнес",
             "url": "https://globalautobusiness.uz/",
             "logo": "https://globalautobusiness.uz/logo.jpg",
-            "description": "Premium spare parts for trucks and heavy vehicles.",
+            "image": "https://globalautobusiness.uz/logo.jpg",
+            "description": "Запчасти и фильтры для грузовиков, экскаваторов и спецтехники: Perkins, CAT, Komatsu, Doosan, Hyundai, ZF, Hengst, Donaldson, Fleetguard.",
             "email": "globalautobusiness.uz@gmail.com",
             "telephone": "+998903716666",
+            "priceRange": "$$",
+            "currenciesAccepted": "UZS",
+            "hasMap": "https://maps.app.goo.gl/rffS65bLksDa9RqV8",
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "UZ"
+            },
+            "areaServed": [
+              { "@type": "Country", "name": "Uzbekistan" },
+              { "@type": "Country", "name": "Kazakhstan" },
+              { "@type": "Country", "name": "Kyrgyzstan" },
+              { "@type": "Country", "name": "Tajikistan" },
+              { "@type": "Country", "name": "Russia" }
+            ],
+            "openingHoursSpecification": [{
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+              "opens": "00:00",
+              "closes": "23:59"
+            }],
             "contactPoint": [{
               "@type": "ContactPoint",
               "telephone": "+998903716666",
               "contactType": "sales",
+              "availableLanguage": ["ru", "en", "uz"]
+            }, {
+              "@type": "ContactPoint",
+              "telephone": "+998983618884",
+              "contactType": "customer support",
               "availableLanguage": ["ru", "en", "uz"]
             }]
           },

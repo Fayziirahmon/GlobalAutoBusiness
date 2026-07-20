@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
 import Reveal from '../components/Reveal'
 import ProductCard from '../components/ProductCard'
@@ -9,6 +9,7 @@ import { fetchProductsPage } from '../api/client'
 import { useLang } from '../context/LanguageContext'
 import { catName } from '../data/categories'
 import Seo from '../components/Seo'
+import { SITE_URL, SITE_NAME } from '../seo/seo.config'
 
 const PER_PAGE = 50 // har sahifada 50 ta card
 
@@ -84,7 +85,9 @@ export default function Products() {
   const { t, lang } = useLang()
   const [searchParams, setSearchParams] = useSearchParams()
   const page = Math.max(1, parseInt(searchParams.get('page')) || 1)
-  const category = searchParams.get('category') || ''
+  // Kategoriya /catalog/:slug dan yoki eski ?category= dan olinadi
+  const { slug } = useParams()
+  const category = slug || searchParams.get('category') || ''
 
   // Bosh sahifadagi tez qidiruv /products?q=... ga yuboradi
   const [query, setQuery] = useState(() => searchParams.get('q') || '')
@@ -113,7 +116,9 @@ export default function Products() {
 
   const totalPages = data?.totalPages ?? 1
   const total = data?.totalProducts ?? 0
-  const products = data?.products ?? []
+  // useMemo — aks holda har renderda yangi massiv bo'lib, quyidagi
+  // memo'lar qayta hisoblanaveradi
+  const products = useMemo(() => data?.products ?? [], [data])
 
   const rangeLabel = useMemo(() => {
     if (!total) return ''
@@ -124,12 +129,40 @@ export default function Products() {
 
   const heading = category ? catName(category, lang) : t('products.title')
 
+  // Kategoriyadagi brendlar — meta description uchun (real qidiruv so'zlari)
+  const brandLine = useMemo(
+    () => [...new Set(products.map((p) => p.brand))].filter((b) => b && b !== 'GAB').slice(0, 6).join(', '),
+    [products]
+  )
+
+  // ItemList JSON-LD — Google ro'yxatni tushunishi uchun
+  const itemListLd = useMemo(() => {
+    if (!products.length) return null
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: heading,
+      numberOfItems: total,
+      itemListElement: products.slice(0, 30).map((p, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${SITE_URL}/product/${p.id}`,
+        name: typeof p.name === 'string' ? p.name : (p.name?.[lang] ?? p.name?.ru),
+      })),
+    }
+  }, [products, heading, total, lang])
+
   return (
     <PageWrapper>
       <Seo
-        title={category ? `${heading} — GlobalAutoBusiness` : t('seo.products.title')}
-        description={t('seo.products.desc')}
-        canonicalPath={category ? `/products?category=${category}` : (page > 1 ? `/products?page=${page}` : '/products')}
+        title={category
+          ? `${heading} — купить запчасти для спецтехники | ${SITE_NAME}`
+          : t('seo.products.title')}
+        description={category
+          ? `${heading}: ${brandLine} — в наличии на складе. Оригинальные и аналоговые запчасти для грузовиков и спецтехники, доставка по СНГ.`
+          : t('seo.products.desc')}
+        canonicalPath={category ? `/catalog/${category}` : (page > 1 ? `/products?page=${page}` : '/products')}
+        jsonLd={itemListLd}
       />
       {/* Header */}
       <section style={{ paddingTop: 140, paddingBottom: 44, borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
