@@ -22,6 +22,15 @@ const gallery = (...nums) => nums.map(img)
 const img2 = (n) => `/images2/photo_${n}_2026-07-20_19-27-${n <= 84 ? '45' : '46'}.jpg`
 const gallery2 = (...nums) => nums.map(img2)
 
+// 3-partiya: public/images3/photo_N_2026-07-29_15-58-36.jpg  (N <= 97)
+//            public/images3/photo_N_2026-07-29_15-58-37.jpg  (N >= 98)
+const img3 = (n) => `/images3/photo_${n}_2026-07-29_15-58-${n <= 97 ? '36' : '37'}.jpg`
+const gallery3 = (...nums) => nums.map(img3)
+
+// 4-partiya: public/images4/photo_N_2026-07-29_16-38-57.jpg  (barcha N)
+const img4 = (n) => `/images4/photo_${n}_2026-07-29_16-38-57.jpg`
+const gallery4 = (...nums) => nums.map(img4)
+
 const P = [
   // ── Сепараторы топлива / Fuel-water separators ───────────────
   {
@@ -202,7 +211,7 @@ const P = [
     category: 'fuel-systems',
     cross: ['G5800-1105240C', 'VG1540080211', 'L6500-1105350', 'S00001498+03'],
     photos: [43, 44],
-    photos2: [53, 54, 55, 57],
+    photos2: [55, 57, 53, 54],
     featured: false,
     name: {
       ru: 'Фильтр топливный LANTUDONGLI CX1017 (VG1540080211)',
@@ -217,7 +226,7 @@ const P = [
     category: 'fuel-systems',
     cross: ['8983129180'],
     photos: [75, 76, 77],
-    photos2: [81, 82, 83],
+    photos2: [82, 83, 81],
     featured: true,
     name: {
       ru: 'Фильтр топливный Isuzu 8-98312918-0 Dual Element',
@@ -553,7 +562,7 @@ const P2 = [
     brand: 'LANTUDONGLI',
     category: 'filters',
     cross: ['K6000-1012240A', '65.05510-5020', 'LF14003', 'LF9333', 'LF3380'],
-    photos2: [1, 2, 3, 4],
+    photos2: [3, 4, 1, 2],
     featured: true,
     name: {
       ru: 'Фильтр масляный LANTUDONGLI LF670 (K6000-1012240A)',
@@ -567,7 +576,7 @@ const P2 = [
     brand: 'Perkins',
     category: 'filters',
     cross: [],
-    photos2: [5, 6, 7, 8],
+    photos2: [7, 8, 5, 6],
     featured: true,
     name: {
       ru: 'Фильтр масляный Perkins 2654407 (Genuine)',
@@ -581,7 +590,7 @@ const P2 = [
     brand: 'Perkins',
     category: 'filters',
     cross: [],
-    photos2: [9, 10, 11, 12],
+    photos2: [11, 12, 9, 10],
     featured: false,
     name: {
       ru: 'Фильтр масляный Perkins 2654403 ECOplus',
@@ -595,7 +604,8 @@ const P2 = [
     brand: 'LANTU',
     category: 'filters',
     cross: [],
-    photos2: [30, 31, 32],
+    photos2: [32, 30, 31],
+    photos4: [3, 1, 2],
     featured: false,
     name: {
       ru: 'Элемент фильтра масляного LANTU LF14004',
@@ -637,7 +647,7 @@ const P2 = [
     brand: 'LANTUDONGLI',
     category: 'filters',
     cross: ['JX0810B', 'JX0810D'],
-    photos2: [76, 77, 78],
+    photos2: [78, 76, 77],
     featured: false,
     name: {
       ru: 'Фильтр масляный LANTUDONGLI WB202 (JX0810B)',
@@ -653,7 +663,7 @@ const P2 = [
     brand: 'LANTU',
     category: 'fuel-systems',
     cross: ['FF5421', 'FF5612'],
-    photos2: [13, 14, 15],
+    photos2: [14, 15, 13],
     featured: true,
     name: {
       ru: 'Фильтр топливный LANTU FF5485',
@@ -681,7 +691,7 @@ const P2 = [
     brand: 'Perkins',
     category: 'fuel-systems',
     cross: [],
-    photos2: [22, 23, 24],
+    photos2: [24, 22, 23],
     featured: false,
     name: {
       ru: 'Фильтр топливный Perkins 140517050',
@@ -695,7 +705,7 @@ const P2 = [
     brand: 'LANTU',
     category: 'fuel-systems',
     cross: [],
-    photos2: [25, 26, 27, 28],
+    photos2: [27, 28, 25, 26],
     featured: false,
     name: {
       ru: 'Элемент фильтра топливного LANTU FF266',
@@ -709,7 +719,7 @@ const P2 = [
     brand: 'Caterpillar',
     category: 'fuel-systems',
     cross: ['141203G0868P0'],
-    photos2: [35, 36, 37],
+    photos2: [36, 37, 35],
     featured: true,
     name: {
       ru: 'Фильтр топливный CAT 1R-0762 Advanced High Efficiency',
@@ -737,7 +747,7 @@ const P2 = [
     brand: 'LANTU',
     category: 'fuel-systems',
     cross: ['3931062'],
-    photos2: [43, 44, 45],
+    photos2: [44, 45, 43],
     featured: false,
     name: {
       ru: 'Фильтр топливный LANTU FF5327 (3931062)',
@@ -751,7 +761,7 @@ const P2 = [
     brand: 'LANTUDONGLI',
     category: 'fuel-systems',
     cross: ['SP149530', 'F0047-Z1', '22480372', '4297132', 'TP115J-01A-00001', '618DA117002A'],
-    photos2: [46, 47, 48],
+    photos2: [48, 46, 47],
     featured: false,
     name: {
       ru: 'Фильтр топливный LANTUDONGLI 1000422382',
@@ -779,7 +789,7 @@ const P2 = [
     brand: 'LANTU',
     category: 'fuel-systems',
     cross: ['G5800-1105140C', 'VG1540080110', 'S00001498+03'],
-    photos2: [50, 51, 52],
+    photos2: [52, 50, 51],
     featured: false,
     name: {
       ru: 'Фильтр топливный LANTU CX1020 (VG1540080110) HOWO',
@@ -793,7 +803,7 @@ const P2 = [
     brand: 'LANTU',
     category: 'fuel-systems',
     cross: ['FS1212', 'WBF1212'],
-    photos2: [68, 69, 70, 71],
+    photos2: [70, 71, 68, 69],
     featured: false,
     name: {
       ru: 'Фильтр топливный LANTU FS36253 (FS1212)',
@@ -807,7 +817,7 @@ const P2 = [
     brand: 'LANTU',
     category: 'fuel-systems',
     cross: ['FS36257'],
-    photos2: [72, 73, 74, 75],
+    photos2: [74, 75, 72, 73],
     featured: false,
     name: {
       ru: 'Фильтр топливный LANTU FS1280 (FS36257)',
@@ -835,7 +845,7 @@ const P2 = [
     brand: 'VINCELLARTU',
     category: 'fuel-systems',
     cross: [],
-    photos2: [88, 89, 90, 91],
+    photos2: [89, 90, 91, 88],
     featured: false,
     name: {
       ru: 'Фильтр топливный VINCELLARTU CX0710',
@@ -851,7 +861,7 @@ const P2 = [
     brand: 'LANTUDONGLI',
     category: 'fuel-systems',
     cross: ['FF5488', 'FF5580', 'FF5866', 'FF5894'],
-    photos2: [16, 17, 18, 19],
+    photos2: [18, 19, 16, 17],
     featured: true,
     name: {
       ru: 'Сепаратор топливный LANTUDONGLI FF5767',
@@ -865,7 +875,7 @@ const P2 = [
     brand: 'LANTUDONGLI',
     category: 'fuel-systems',
     cross: ['R120P', 'R160T', 'K6200-1105350', 'K6500-1105350', '5801820210', 'K2000-1105350'],
-    photos2: [40, 41, 42],
+    photos2: [42, 40, 41],
     featured: true,
     name: {
       ru: 'Сепаратор топливный LANTUDONGLI R120T (с отстойником)',
@@ -879,7 +889,7 @@ const P2 = [
     brand: 'LANTU',
     category: 'fuel-systems',
     cross: ['1105010-488/B'],
-    photos2: [56, 58, 59, 60],
+    photos2: [60, 56, 58, 59],
     featured: false,
     name: {
       ru: 'Сепаратор топливный LANTU PL270 (с отстойником)',
@@ -893,7 +903,7 @@ const P2 = [
     brand: 'Hyundai',
     category: 'fuel-systems',
     cross: [],
-    photos2: [84, 85, 86],
+    photos2: [85, 86, 84],
     featured: true,
     name: {
       ru: 'Сепаратор топливный Hyundai 11LB-20310 (Racor/Parker)',
@@ -933,6 +943,540 @@ const P2 = [
   },
 ]
 
+/* ═══════════════════════════════════════════════════════════════
+ *  3-PARTIYA — public/images3/ (100 surat = 33 yangi mahsulot).
+ *  photos3 → images3 papkasidan. Har biri HAQIQIY suratdan o'qilgan.
+ *  Shu partiyada: NBCD tasma remenlari, WABCO havo quritgichi,
+ *  moy shprisi, JCB/Weichai/CAT/Hyundai filtrlari.
+ * ═══════════════════════════════════════════════════════════════ */
+const P3 = [
+  // ── Масляные фильтры / Oil filters ───────────────────────────
+  {
+    id: 'lantu-lf16015-oil-filter',
+    sku: 'LF16015',
+    brand: 'LANTU',
+    category: 'filters',
+    cross: ['5399594', 'LF16352'],
+    photos3: [2, 3, 1],
+    featured: true,
+    name: {
+      ru: 'Фильтр масляный LANTU LF16015 (5399594)',
+      en: 'LANTU LF16015 Oil Filter (5399594)',
+      uz: 'LANTU LF16015 moy filtri (5399594)',
+    },
+  },
+  {
+    id: 'lantudongli-jx1008a-oil-filter',
+    sku: 'JX1008A',
+    brand: 'LANTUDONGLI',
+    category: 'filters',
+    cross: ['JX1011', 'LZX-J8008'],
+    photos3: [9, 10, 7, 8],
+    featured: false,
+    name: {
+      ru: 'Фильтр масляный LANTUDONGLI JX1008A (JX1011)',
+      en: 'LANTUDONGLI JX1008A Oil Filter (JX1011)',
+      uz: 'LANTUDONGLI JX1008A moy filtri (JX1011)',
+    },
+  },
+  {
+    id: 'hyundai-11e1-70140-oil-filter',
+    sku: '11E1-70140',
+    brand: 'Hyundai',
+    category: 'filters',
+    cross: ['SE17 W07A17A1'],
+    photos3: [38, 39, 36, 37],
+    featured: true,
+    name: {
+      ru: 'Фильтр масляный Hyundai 11E1-70140',
+      en: 'Hyundai 11E1-70140 Oil Filter',
+      uz: 'Hyundai 11E1-70140 moy filtri',
+    },
+  },
+  {
+    id: 'cat-462-1171-oil-filter',
+    sku: '462-1171',
+    brand: 'Caterpillar',
+    category: 'filters',
+    cross: [],
+    photos3: [35],
+    featured: true,
+    name: {
+      ru: 'Фильтр масляный CAT 462-1171 Advanced High Efficiency',
+      en: 'CAT 462-1171 Oil Filter, Advanced High Efficiency',
+      uz: 'CAT 462-1171 moy filtri, Advanced High Efficiency',
+    },
+  },
+  {
+    id: 'weichai-13055724-oil-filter-element',
+    sku: '13055724',
+    brand: 'Weichai',
+    category: 'filters',
+    cross: [],
+    photos3: [93, 94, 92],
+    featured: false,
+    name: {
+      ru: 'Элемент фильтра масляного Weichai 13055724',
+      en: 'Weichai 13055724 Oil Filter Element',
+      uz: 'Weichai 13055724 moy filtri elementi',
+    },
+  },
+
+  // ── Топливные фильтры / Fuel filters ─────────────────────────
+  {
+    id: 'hyundai-31945-84000-fuel-filter',
+    sku: '31945-84000',
+    brand: 'Hyundai',
+    category: 'fuel-systems',
+    cross: [],
+    photos3: [5, 6, 4],
+    featured: true,
+    name: {
+      ru: 'Фильтр топливный Hyundai 31945-84000',
+      en: 'Hyundai 31945-84000 Fuel Filter',
+      uz: 'Hyundai 31945-84000 yoqilg‘i filtri',
+    },
+  },
+  {
+    id: 'hyundai-11e1-70010se-fuel-filter',
+    sku: '11E1-70010SE',
+    brand: 'Hyundai',
+    category: 'fuel-systems',
+    cross: ['SE17 W07A1', 'A1'],
+    photos3: [22, 23, 21],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный Hyundai 11E1-70010SE',
+      en: 'Hyundai 11E1-70010SE Fuel Filter',
+      uz: 'Hyundai 11E1-70010SE yoqilg‘i filtri',
+    },
+  },
+  {
+    id: 'lantu-cx0709a1-fuel-filter',
+    sku: 'CX0709A1',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: [],
+    photos3: [24, 25],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTU CX0709A1',
+      en: 'LANTU CX0709A1 Fuel Filter',
+      uz: 'LANTU CX0709A1 yoqilg‘i filtri',
+    },
+  },
+  {
+    id: 'perkins-4429491-fuel-filter',
+    sku: '4429491',
+    brand: 'Perkins',
+    category: 'fuel-systems',
+    cross: [],
+    photos3: [28],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный Perkins 4429491 Powerpart',
+      en: 'Perkins 4429491 Fuel Filter Powerpart',
+      uz: 'Perkins 4429491 yoqilg‘i filtri Powerpart',
+    },
+  },
+  {
+    id: 'lantudongli-cx0711-fuel-filter',
+    sku: 'CX0711',
+    brand: 'LANTUDONGLI',
+    category: 'fuel-systems',
+    cross: ['1117060-29DB', 'CX0712B', 'A3000-1105030', 'DX2040', 'UC200', 'UC220C', 'ST-302'],
+    photos3: [31, 29, 30],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTUDONGLI CX0711 (UC220)',
+      en: 'LANTUDONGLI CX0711 Fuel Filter (UC220)',
+      uz: 'LANTUDONGLI CX0711 yoqilg‘i filtri (UC220)',
+    },
+  },
+  {
+    id: 'cat-1r-0749-fuel-filter',
+    sku: '1R-0749',
+    brand: 'Caterpillar',
+    category: 'fuel-systems',
+    cross: ['141203G0868P0'],
+    photos3: [84, 85, 83],
+    featured: true,
+    name: {
+      ru: 'Фильтр топливный CAT 1R-0749 Advanced High Efficiency',
+      en: 'CAT 1R-0749 Fuel Filter, Advanced High Efficiency',
+      uz: 'CAT 1R-0749 yoqilg‘i filtri, Advanced High Efficiency',
+    },
+  },
+  {
+    id: 'lantu-ff5706-fuel-filter',
+    sku: 'FF5706',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['5262311'],
+    photos3: [88, 86, 87],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTU FF5706 User-Friendly (5262311)',
+      en: 'LANTU FF5706 User-Friendly Fuel Filter (5262311)',
+      uz: 'LANTU FF5706 yoqilg‘i filtri User-Friendly (5262311)',
+    },
+  },
+  {
+    id: 'jcb-320-07394-fuel-filter',
+    sku: '320/07394',
+    brand: 'JCB',
+    category: 'fuel-systems',
+    cross: [],
+    photos3: [89, 90, 91],
+    featured: true,
+    name: {
+      ru: 'Фильтр топливный JCB 320/07394',
+      en: 'JCB 320/07394 Fuel Filter',
+      uz: 'JCB 320/07394 yoqilg‘i filtri',
+    },
+  },
+  {
+    id: 'lantu-612600081334-fuel-filter',
+    sku: '612600081334',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['1000442956', 'FF5485', 'FF5421', 'FF5612'],
+    photos3: [100, 98, 99],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTU 612600081334 (Weichai, FF5485)',
+      en: 'LANTU 612600081334 Fuel Filter (Weichai, FF5485)',
+      uz: 'LANTU 612600081334 yoqilg‘i filtri (Weichai, FF5485)',
+    },
+  },
+
+  // ── Сепараторы топлива / Fuel-water separators ───────────────
+  {
+    id: 'lantu-r90t-fuel-water-separator',
+    sku: 'R90T',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['1117211-P301', '1001312', 'R90P'],
+    photos3: [75, 97, 73, 74, 95, 96],
+    featured: true,
+    name: {
+      ru: 'Сепаратор топливный LANTU R90T (с отстойником)',
+      en: 'LANTU R90T Fuel/Water Separator (with bowl)',
+      uz: 'LANTU R90T yoqilg‘i/suv separatori (stakan bilan)',
+    },
+  },
+  {
+    id: 'lantudongli-pl420-fuel-water-separator',
+    sku: 'PL420',
+    brand: 'LANTUDONGLI',
+    category: 'fuel-systems',
+    cross: ['1000424916', '1000422381', '1000495963', '1000053557', 'FS36267', 'H4110210901A0'],
+    photos3: [34, 32, 33],
+    featured: true,
+    name: {
+      ru: 'Сепаратор топливный LANTUDONGLI PL420 (с отстойником)',
+      en: 'LANTUDONGLI PL420 Fuel/Water Separator (with bowl)',
+      uz: 'LANTUDONGLI PL420 yoqilg‘i/suv separatori (stakan bilan)',
+    },
+  },
+  {
+    id: 'lantu-fs36231-fuel-water-separator',
+    sku: 'FS36231',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['5319566'],
+    photos3: [26, 27],
+    featured: false,
+    name: {
+      ru: 'Сепаратор топливный LANTU FS36231 (5319566)',
+      en: 'LANTU FS36231 Fuel/Water Separator (5319566)',
+      uz: 'LANTU FS36231 yoqilg‘i/suv separatori (5319566)',
+    },
+  },
+  {
+    id: 'cat-326-1644-fuel-water-separator',
+    sku: '326-1644',
+    brand: 'Caterpillar',
+    category: 'fuel-systems',
+    cross: ['141203G0868P0'],
+    photos3: [77, 78, 76],
+    featured: true,
+    name: {
+      ru: 'Сепаратор топливный CAT 326-1644 Advanced High Efficiency',
+      en: 'CAT 326-1644 Fuel/Water Separator, Advanced High Efficiency',
+      uz: 'CAT 326-1644 yoqilg‘i/suv separatori, Advanced High Efficiency',
+    },
+  },
+
+  // ── Гидравлика / Hydraulic filters ───────────────────────────
+  {
+    id: 'donaldson-p164378-hydraulic-filter',
+    sku: 'P164378',
+    brand: 'Donaldson',
+    category: 'hydraulics',
+    cross: [],
+    photos3: [11, 12],
+    featured: true,
+    name: {
+      ru: 'Фильтр гидравлический Donaldson P164378 Duramax (USA)',
+      en: 'Donaldson P164378 Duramax Hydraulic Filter (Made in USA)',
+      uz: 'Donaldson P164378 Duramax gidravlika filtri (USA)',
+    },
+  },
+
+  // ── Пневмосистема / Pneumatic ────────────────────────────────
+  {
+    id: 'wabco-4324102227-air-dryer-assembly',
+    sku: '432 410 222 7',
+    brand: 'WABCO',
+    category: 'pneumatic',
+    cross: ['M39x1.5'],
+    photos3: [15, 16, 17, 18, 19, 13, 14],
+    featured: true,
+    name: {
+      ru: 'Осушитель воздуха WABCO 432 410 222 7 (Air System Protector) в сборе',
+      en: 'WABCO 432 410 222 7 Air Dryer (Air System Protector) Assembly',
+      uz: 'WABCO 432 410 222 7 havo quritgichi (Air System Protector) yig‘ma',
+    },
+  },
+  {
+    id: 'hyundai-wabco-m3000-water-filter',
+    sku: 'M3000',
+    brand: 'Hyundai / WABCO',
+    category: 'pneumatic',
+    cross: [],
+    photos3: [20],
+    featured: false,
+    name: {
+      ru: 'Фильтр-осушитель WABCO M3000 Air System Protector (Hyundai)',
+      en: 'WABCO M3000 Air System Protector Water Filter (Hyundai)',
+      uz: 'WABCO M3000 Air System Protector suv filtri (Hyundai)',
+    },
+  },
+
+  // ── Инструмент / Спецтехника ─────────────────────────────────
+  {
+    id: 'hyundai-yl-900cc-grease-gun',
+    sku: 'YL-900CC',
+    brand: 'Hyundai',
+    category: 'special-machinery',
+    cross: ['YL-9018A', 'YL-9077B', 'YL-9077C'],
+    photos3: [80, 81, 82, 79],
+    featured: true,
+    name: {
+      ru: 'Шприц для смазки (плунжерный) Hyundai YL-900CC, 12000 PSI',
+      en: 'Hyundai YL-900CC Grease Gun, 12000 PSI',
+      uz: 'Hyundai YL-900CC moy shprisi (grease gun), 12000 PSI',
+    },
+  },
+
+  // ── Ремни приводные / Drive belts (NBCD) ─────────────────────
+  {
+    id: 'nbcd-8pk1700-drive-belt',
+    sku: '8PK1700',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: ['3430-1307042B'],
+    photos3: [40, 41, 42],
+    featured: true,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK1700',
+      en: 'NBCD 8PK1700 Poly-V Drive Belt',
+      uz: 'NBCD 8PK1700 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-8pk1740-drive-belt',
+    sku: '8PK1740',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: ['D30-1307042'],
+    photos3: [55, 56, 57],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK1740',
+      en: 'NBCD 8PK1740 Poly-V Drive Belt',
+      uz: 'NBCD 8PK1740 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-8pk1660-drive-belt',
+    sku: '8PK1660',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: [],
+    photos3: [46, 47, 48],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK1660',
+      en: 'NBCD 8PK1660 Poly-V Drive Belt',
+      uz: 'NBCD 8PK1660 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-8pk1650-drive-belt',
+    sku: '8PK1650',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: ['D16A-106-38+A'],
+    photos3: [58, 59, 60],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK1650',
+      en: 'NBCD 8PK1650 Poly-V Drive Belt',
+      uz: 'NBCD 8PK1650 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-8pk1500-drive-belt',
+    sku: '8PK1500',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: ['288867'],
+    photos3: [49, 50, 51],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK1500',
+      en: 'NBCD 8PK1500 Poly-V Drive Belt',
+      uz: 'NBCD 8PK1500 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-8pk1150-drive-belt',
+    sku: '8PK1150',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: [],
+    photos3: [61, 62, 63],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK1150',
+      en: 'NBCD 8PK1150 Poly-V Drive Belt',
+      uz: 'NBCD 8PK1150 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-8pk1090-drive-belt',
+    sku: '8PK1090',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: [],
+    photos3: [64, 65, 66],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK1090',
+      en: 'NBCD 8PK1090 Poly-V Drive Belt',
+      uz: 'NBCD 8PK1090 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-8pk950-drive-belt',
+    sku: '8PK950',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: ['612600090682'],
+    photos3: [43, 44, 45],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK950',
+      en: 'NBCD 8PK950 Poly-V Drive Belt',
+      uz: 'NBCD 8PK950 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-8pk820-drive-belt',
+    sku: '8PK820',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: ['612600061987'],
+    photos3: [52, 53, 54],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 8PK820',
+      en: 'NBCD 8PK820 Poly-V Drive Belt',
+      uz: 'NBCD 8PK820 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-10pk1104-drive-belt',
+    sku: '10PK1104',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: ['612600661317'],
+    photos3: [70, 71, 72],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 10PK1104',
+      en: 'NBCD 10PK1104 Poly-V Drive Belt',
+      uz: 'NBCD 10PK1104 ko‘p ariqli uzatma remeni',
+    },
+  },
+  {
+    id: 'nbcd-10pk1098-drive-belt',
+    sku: '10PK1098',
+    brand: 'NBCD',
+    category: 'consumables',
+    cross: [],
+    photos3: [67, 68, 69],
+    featured: false,
+    name: {
+      ru: 'Ремень приводной поликлиновой NBCD 10PK1098 (HOWO/Auman)',
+      en: 'NBCD 10PK1098 Poly-V Drive Belt (HOWO/Auman)',
+      uz: 'NBCD 10PK1098 ko‘p ariqli uzatma remeni (HOWO/Auman)',
+    },
+  },
+]
+
+/* ═══════════════════════════════════════════════════════════════
+ *  4-PARTIYA — public/images4/ (12 surat = 3 yangi mahsulot).
+ *  LF14004 (1-3) yuqoridagi mavjud mahsulotga qo'shildi.
+ *  Rasm tartibi: avval filtr, keyin quti.
+ * ═══════════════════════════════════════════════════════════════ */
+const P4 = [
+  {
+    id: 'lantu-cx85100-fuel-filter',
+    sku: 'CX85100',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['CX0810', '1117050A52D', 'FF5628', 'WK940/19'],
+    photos4: [6, 7, 4, 5],
+    featured: true,
+    name: {
+      ru: 'Фильтр топливный LANTU CX85100 (1117050A52D / FF5628)',
+      en: 'LANTU CX85100 Fuel Filter (1117050A52D / FF5628)',
+      uz: 'LANTU CX85100 yoqilg‘i filtri (1117050A52D / FF5628)',
+    },
+  },
+  {
+    id: 'lantudongli-lf777-oil-filter',
+    sku: 'LF777',
+    brand: 'LANTUDONGLI',
+    category: 'filters',
+    cross: ['K1117-1012040A', '37540-02100', '4713982'],
+    photos4: [10, 8, 9],
+    featured: false,
+    name: {
+      ru: 'Фильтр масляный LANTUDONGLI LF777 (K1117-1012040A)',
+      en: 'LANTUDONGLI LF777 Oil Filter (K1117-1012040A)',
+      uz: 'LANTUDONGLI LF777 moy filtri (K1117-1012040A)',
+    },
+  },
+  {
+    id: 'lantu-d638-002-903-fuel-filter',
+    sku: 'D638-002-903',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: [],
+    photos4: [11, 12],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTU D638-002-903',
+      en: 'LANTU D638-002-903 Fuel Filter',
+      uz: 'LANTU D638-002-903 yoqilg‘i filtri',
+    },
+  },
+]
+
 const CAT_DESC = {
   'fuel-systems': {
     ru: 'Топливный фильтр для дизельной техники. Защищает ТНВД и форсунки от воды и механических примесей.',
@@ -954,10 +1498,25 @@ const CAT_DESC = {
     en: 'Truck pneumatic-system component: air dryer for the brake system. Protects circuits from moisture and corrosion.',
     uz: 'Yuk mashina pnevmo tizimi komponenti: tormoz tizimi uchun havo quritgichi. Konturlarni namlik va korroziyadan himoya qiladi.',
   },
+  consumables: {
+    ru: 'Приводной поликлиновой ремень для грузовиков и спецтехники. Обеспечивает привод генератора, насосов и вентилятора.',
+    en: 'Poly-V drive belt for trucks and heavy equipment. Drives the alternator, pumps and cooling fan.',
+    uz: 'Yuk mashina va maxsus texnika uchun ko‘p ariqli uzatma remeni. Generator, nasos va ventilyatorni harakatga keltiradi.',
+  },
+  'special-machinery': {
+    ru: 'Инструмент и оснастка для обслуживания грузовиков и спецтехники: смазочное оборудование, расходные принадлежности.',
+    en: 'Tooling and equipment for servicing trucks and heavy machinery: lubrication tools and workshop accessories.',
+    uz: 'Yuk mashina va maxsus texnikaga xizmat ko‘rsatish uchun asbob-uskuna: moylash jihozlari va ustaxona aksessuarlari.',
+  },
 }
 
-export const products = [...P, ...P2].map((p) => {
-  const images = [...gallery(...(p.photos || [])), ...gallery2(...(p.photos2 || []))]
+export const products = [...P, ...P2, ...P3, ...P4].map((p) => {
+  const images = [
+    ...gallery(...(p.photos || [])),
+    ...gallery2(...(p.photos2 || [])),
+    ...gallery3(...(p.photos3 || [])),
+    ...gallery4(...(p.photos4 || [])),
+  ]
   return {
     id: p.id,
     sku: p.sku,

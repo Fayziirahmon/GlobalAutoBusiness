@@ -15,7 +15,15 @@
       "Bash(grep -E \"\\\\\\\\\\\\\\\\src\\\\\\\\\\\\\\\\\")",
       "Bash(grep -E \"\\\\\\\\\\\\\\\\src\\\\\\\\\\\\\\\\.*\\\\.\\(jsx|js\\)$\")",
       "Bash(node --input-type=module -e ' *)",
-      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./package.json'\\).scripts,null,2\\)\\)\")"
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./package.json'\\).scripts,null,2\\)\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('package.json','utf8'\\)\\); console.log\\('OK root'\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('server/package.json','utf8'\\)\\); console.log\\('OK server'\\)\")",
+      "Bash(node -e \"console.log\\('tsx:', require\\('./node_modules/tsx/package.json'\\).version\\)\")",
+      "Bash(npx tsc *)",
+      "Bash(echo \"=== exit: $? \\(bo'sh/0 = xato yo'q\\) ===\")"
     ]
   }
 }
