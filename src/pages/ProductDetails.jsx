@@ -7,6 +7,7 @@ import { Icon } from '../components/Icons'
 import { useApi } from '../hooks/useApi'
 import { getProduct } from '../api/client'
 import { useLang } from '../context/LanguageContext'
+import { useCart } from '../context/CartContext'
 import { catName } from '../data/categories'
 import Seo from '../components/Seo'
 import { SITE_URL, SITE_NAME } from '../seo/seo.config'
@@ -34,6 +35,14 @@ export default function ProductDetails() {
   const { data: product, loading, error } = useApi(() => getProduct(id), [id])
   const [qty, setQty] = useState(1)
   const [activeImg, setActiveImg] = useState(0)
+  const [added, setAdded] = useState(false)
+  const { add } = useCart()
+
+  const addToCart = () => {
+    add(product, qty)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
 
   if (loading) return <PageWrapper><Loading /></PageWrapper>
 
@@ -192,8 +201,15 @@ export default function ProductDetails() {
                   <span style={{ width: 44, textAlign: 'center', fontWeight: 600, fontSize: 15 }}>{qty}</span>
                   <button onClick={() => setQty((q) => q + 1)} style={qtyBtn}>+</button>
                 </div>
-                <button className="btn btn-primary" disabled={!inStock} style={{ flex: 1, minWidth: 200, opacity: inStock ? 1 : 0.5, cursor: inStock ? 'pointer' : 'not-allowed' }}>
-                  <Icon name="cart" size={17} /> {t('pd.addToOrder')}
+                <button
+                  onClick={addToCart}
+                  className="btn btn-primary"
+                  disabled={!inStock}
+                  style={{ flex: 1, minWidth: 200, opacity: inStock ? 1 : 0.5, cursor: inStock ? 'pointer' : 'not-allowed' }}
+                >
+                  {added
+                    ? <><Icon name="check" size={17} /> {t('cart.added')}</>
+                    : <><Icon name="cart" size={17} /> {t('pd.addToOrder')}</>}
                 </button>
               </div>
               <Link to="/contact" className="btn btn-outline btn-block">{t('pd.bulkQuote')}</Link>

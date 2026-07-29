@@ -322,9 +322,12 @@ input, textarea, select { font-family: inherit; outline: none; }
 .marquee:hover .marquee__track { animation-play-state: paused; }
 .marquee__item {
   flex: none;
-  padding: 0 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 30px;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(18px, 2.4vw, 30px);
+  font-size: clamp(17px, 2.2vw, 26px);
   font-weight: 700;
   letter-spacing: -0.5px;
   text-transform: uppercase;
@@ -333,6 +336,19 @@ input, textarea, select { font-family: inherit; outline: none; }
   transition: color 0.3s var(--ease);
 }
 .marquee__item:hover { color: var(--text); }
+
+/* Marka logotipi — sayt uslubiga mos kulrang, hover'da to'liq rang */
+.marquee__logo {
+  height: clamp(26px, 3vw, 38px);
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.55;
+  transition: filter 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+.marquee__item:hover .marquee__logo { filter: grayscale(0); opacity: 1; }
+[data-theme="dark"] .marquee__logo { filter: grayscale(1) brightness(1.9); }
+[data-theme="dark"] .marquee__item:hover .marquee__logo { filter: grayscale(0) brightness(1.05); }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* ─── Sahifa scroll indikatori ───────────────── */

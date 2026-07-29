@@ -17,6 +17,11 @@
 const img = (n) => `/images/photo_${n}_2026-07-15_14-17-${n <= 50 ? '36' : '37'}.jpg`
 const gallery = (...nums) => nums.map(img)
 
+// 2-partiya: public/images2/photo_N_2026-07-20_19-27-45.jpg  (N <= 84)
+//            public/images2/photo_N_2026-07-20_19-27-46.jpg  (N >= 85)
+const img2 = (n) => `/images2/photo_${n}_2026-07-20_19-27-${n <= 84 ? '45' : '46'}.jpg`
+const gallery2 = (...nums) => nums.map(img2)
+
 const P = [
   // ── Сепараторы топлива / Fuel-water separators ───────────────
   {
@@ -68,6 +73,7 @@ const P = [
     category: 'fuel-systems',
     cross: ['3973233'],
     photos: [84],
+    photos2: [29],
     featured: true,
     name: {
       ru: 'Сепаратор топливный Fleetguard FS19732 (Cummins 3973233)',
@@ -194,8 +200,9 @@ const P = [
     sku: 'CX1017',
     brand: 'LANTUDONGLI',
     category: 'fuel-systems',
-    cross: ['G5800-1105240C', 'VG1540080211', 'L6500-1105350'],
+    cross: ['G5800-1105240C', 'VG1540080211', 'L6500-1105350', 'S00001498+03'],
     photos: [43, 44],
+    photos2: [53, 54, 55, 57],
     featured: false,
     name: {
       ru: 'Фильтр топливный LANTUDONGLI CX1017 (VG1540080211)',
@@ -210,6 +217,7 @@ const P = [
     category: 'fuel-systems',
     cross: ['8983129180'],
     photos: [75, 76, 77],
+    photos2: [81, 82, 83],
     featured: true,
     name: {
       ru: 'Фильтр топливный Isuzu 8-98312918-0 Dual Element',
@@ -531,6 +539,400 @@ const P = [
   },
 ]
 
+/* ═══════════════════════════════════════════════════════════════
+ *  2-PARTIYA — public/images2/ (91 surat = 27 yangi mahsulot).
+ *  photos2 → images2 papkasidan. Har biri HAQIQIY suratdan o'qilgan.
+ *  FS19732, CX1017, Isuzu Dual Element — yuqoridagi mavjud
+ *  mahsulotlarga qo'shimcha rakurs sifatida birlashtirildi.
+ * ═══════════════════════════════════════════════════════════════ */
+const P2 = [
+  // ── Масляные фильтры / Oil filters ───────────────────────────
+  {
+    id: 'lantudongli-lf670-oil-filter',
+    sku: 'LF670',
+    brand: 'LANTUDONGLI',
+    category: 'filters',
+    cross: ['K6000-1012240A', '65.05510-5020', 'LF14003', 'LF9333', 'LF3380'],
+    photos2: [1, 2, 3, 4],
+    featured: true,
+    name: {
+      ru: 'Фильтр масляный LANTUDONGLI LF670 (K6000-1012240A)',
+      en: 'LANTUDONGLI LF670 Oil Filter (K6000-1012240A)',
+      uz: 'LANTUDONGLI LF670 moy filtri (K6000-1012240A)',
+    },
+  },
+  {
+    id: 'perkins-2654407-oil-filter',
+    sku: '2654407',
+    brand: 'Perkins',
+    category: 'filters',
+    cross: [],
+    photos2: [5, 6, 7, 8],
+    featured: true,
+    name: {
+      ru: 'Фильтр масляный Perkins 2654407 (Genuine)',
+      en: 'Perkins 2654407 Oil Filter (Genuine)',
+      uz: 'Perkins 2654407 moy filtri (Genuine)',
+    },
+  },
+  {
+    id: 'perkins-2654403-oil-filter',
+    sku: '2654403',
+    brand: 'Perkins',
+    category: 'filters',
+    cross: [],
+    photos2: [9, 10, 11, 12],
+    featured: false,
+    name: {
+      ru: 'Фильтр масляный Perkins 2654403 ECOplus',
+      en: 'Perkins 2654403 Oil Filter ECOplus',
+      uz: 'Perkins 2654403 moy filtri ECOplus',
+    },
+  },
+  {
+    id: 'lantu-lf14004-oil-filter-element',
+    sku: 'LF14004',
+    brand: 'LANTU',
+    category: 'filters',
+    cross: [],
+    photos2: [30, 31, 32],
+    featured: false,
+    name: {
+      ru: 'Элемент фильтра масляного LANTU LF14004',
+      en: 'LANTU LF14004 Oil Filter Element',
+      uz: 'LANTU LF14004 moy filtri elementi',
+    },
+  },
+  {
+    id: 'fleetguard-lf670-oil-filter',
+    sku: 'LF670',
+    brand: 'Fleetguard',
+    category: 'filters',
+    cross: [],
+    photos2: [33, 34],
+    featured: false,
+    name: {
+      ru: 'Фильтр масляный Fleetguard LF670 (Cummins)',
+      en: 'Fleetguard LF670 Lube Filter (Cummins)',
+      uz: 'Fleetguard LF670 moy filtri (Cummins)',
+    },
+  },
+  {
+    id: 'lantu-lf3349-oil-filter',
+    sku: 'LF3349',
+    brand: 'LANTU',
+    category: 'filters',
+    cross: ['LF3806'],
+    photos2: [61, 62, 63, 64],
+    featured: false,
+    name: {
+      ru: 'Фильтр масляный LANTU LF3349 (LF3806)',
+      en: 'LANTU LF3349 Oil Filter (LF3806)',
+      uz: 'LANTU LF3349 moy filtri (LF3806)',
+    },
+  },
+  {
+    id: 'lantudongli-wb202-oil-filter',
+    sku: 'WB202',
+    brand: 'LANTUDONGLI',
+    category: 'filters',
+    cross: ['JX0810B', 'JX0810D'],
+    photos2: [76, 77, 78],
+    featured: false,
+    name: {
+      ru: 'Фильтр масляный LANTUDONGLI WB202 (JX0810B)',
+      en: 'LANTUDONGLI WB202 Oil Filter (JX0810B)',
+      uz: 'LANTUDONGLI WB202 moy filtri (JX0810B)',
+    },
+  },
+
+  // ── Топливные фильтры / Fuel filters ─────────────────────────
+  {
+    id: 'lantu-ff5485-fuel-filter',
+    sku: 'FF5485',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['FF5421', 'FF5612'],
+    photos2: [13, 14, 15],
+    featured: true,
+    name: {
+      ru: 'Фильтр топливный LANTU FF5485',
+      en: 'LANTU FF5485 Fuel Filter',
+      uz: 'LANTU FF5485 yoqilg‘i filtri',
+    },
+  },
+  {
+    id: 'hyundai-xjau-01070-fuel-filter',
+    sku: 'XJAU-01070',
+    brand: 'Hyundai',
+    category: 'fuel-systems',
+    cross: [],
+    photos2: [20, 21],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный Hyundai XJAU-01070',
+      en: 'Hyundai XJAU-01070 Fuel Filter',
+      uz: 'Hyundai XJAU-01070 yoqilg‘i filtri',
+    },
+  },
+  {
+    id: 'perkins-140517050-fuel-filter',
+    sku: '140517050',
+    brand: 'Perkins',
+    category: 'fuel-systems',
+    cross: [],
+    photos2: [22, 23, 24],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный Perkins 140517050',
+      en: 'Perkins 140517050 Fuel Filter',
+      uz: 'Perkins 140517050 yoqilg‘i filtri',
+    },
+  },
+  {
+    id: 'lantu-ff266-fuel-filter-element',
+    sku: 'FF266',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: [],
+    photos2: [25, 26, 27, 28],
+    featured: false,
+    name: {
+      ru: 'Элемент фильтра топливного LANTU FF266',
+      en: 'LANTU FF266 Fuel Filter Element',
+      uz: 'LANTU FF266 yoqilg‘i filtri elementi',
+    },
+  },
+  {
+    id: 'cat-1r-0762-fuel-filter',
+    sku: '1R-0762',
+    brand: 'Caterpillar',
+    category: 'fuel-systems',
+    cross: ['141203G0868P0'],
+    photos2: [35, 36, 37],
+    featured: true,
+    name: {
+      ru: 'Фильтр топливный CAT 1R-0762 Advanced High Efficiency',
+      en: 'CAT 1R-0762 Fuel Filter, Advanced High Efficiency',
+      uz: 'CAT 1R-0762 yoqilg‘i filtri, Advanced High Efficiency',
+    },
+  },
+  {
+    id: 'fleetguard-ff5644-fuel-filter',
+    sku: 'FF5644',
+    brand: 'Fleetguard',
+    category: 'fuel-systems',
+    cross: ['4964234'],
+    photos2: [38, 39],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный Fleetguard FF5644 (Cummins 4964234)',
+      en: 'Fleetguard FF5644 Fuel Filter (Cummins 4964234)',
+      uz: 'Fleetguard FF5644 yoqilg‘i filtri (Cummins 4964234)',
+    },
+  },
+  {
+    id: 'lantu-ff5327-fuel-filter',
+    sku: 'FF5327',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['3931062'],
+    photos2: [43, 44, 45],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTU FF5327 (3931062)',
+      en: 'LANTU FF5327 Fuel Filter (3931062)',
+      uz: 'LANTU FF5327 yoqilg‘i filtri (3931062)',
+    },
+  },
+  {
+    id: 'lantudongli-1000422382-fuel-filter',
+    sku: '1000422382',
+    brand: 'LANTUDONGLI',
+    category: 'fuel-systems',
+    cross: ['SP149530', 'F0047-Z1', '22480372', '4297132', 'TP115J-01A-00001', '618DA117002A'],
+    photos2: [46, 47, 48],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTUDONGLI 1000422382',
+      en: 'LANTUDONGLI 1000422382 Fuel Filter',
+      uz: 'LANTUDONGLI 1000422382 yoqilg‘i filtri',
+    },
+  },
+  {
+    id: 'lantudongli-612630080087-fuel-filter',
+    sku: '612630080087',
+    brand: 'LANTUDONGLI',
+    category: 'fuel-systems',
+    cross: ['1117050BB1DM', 'FF5851', 'FF5740', '1000053555', 'DF018-1', 'FH800802', '1012010010'],
+    photos2: [49],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTUDONGLI 612630080087 (Weichai)',
+      en: 'LANTUDONGLI 612630080087 Fuel Filter (Weichai)',
+      uz: 'LANTUDONGLI 612630080087 yoqilg‘i filtri (Weichai)',
+    },
+  },
+  {
+    id: 'lantu-cx1020-fuel-filter',
+    sku: 'CX1020',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['G5800-1105140C', 'VG1540080110', 'S00001498+03'],
+    photos2: [50, 51, 52],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTU CX1020 (VG1540080110) HOWO',
+      en: 'LANTU CX1020 Fuel Filter (VG1540080110) HOWO',
+      uz: 'LANTU CX1020 yoqilg‘i filtri (VG1540080110) HOWO',
+    },
+  },
+  {
+    id: 'lantu-fs36253-fuel-filter',
+    sku: 'FS36253',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['FS1212', 'WBF1212'],
+    photos2: [68, 69, 70, 71],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTU FS36253 (FS1212)',
+      en: 'LANTU FS36253 Fuel Filter (FS1212)',
+      uz: 'LANTU FS36253 yoqilg‘i filtri (FS1212)',
+    },
+  },
+  {
+    id: 'lantu-fs1280-fuel-filter',
+    sku: 'FS1280',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['FS36257'],
+    photos2: [72, 73, 74, 75],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный LANTU FS1280 (FS36257)',
+      en: 'LANTU FS1280 Fuel Filter (FS36257)',
+      uz: 'LANTU FS1280 yoqilg‘i filtri (FS36257)',
+    },
+  },
+  {
+    id: 'stal-st20702-fuel-filter',
+    sku: 'ST20702',
+    brand: 'STAL',
+    category: 'fuel-systems',
+    cross: ['B222100000521', 'ME015254', 'P550932'],
+    photos2: [79, 80],
+    featured: true,
+    name: {
+      ru: 'Фильтр топливный STAL ST20702 (ME015254 / P550932)',
+      en: 'STAL ST20702 Fuel Filter (ME015254 / P550932)',
+      uz: 'STAL ST20702 yoqilg‘i filtri (ME015254 / P550932)',
+    },
+  },
+  {
+    id: 'vincellartu-cx0710-fuel-filter',
+    sku: 'CX0710',
+    brand: 'VINCELLARTU',
+    category: 'fuel-systems',
+    cross: [],
+    photos2: [88, 89, 90, 91],
+    featured: false,
+    name: {
+      ru: 'Фильтр топливный VINCELLARTU CX0710',
+      en: 'VINCELLARTU CX0710 Fuel Filter',
+      uz: 'VINCELLARTU CX0710 yoqilg‘i filtri',
+    },
+  },
+
+  // ── Сепараторы топлива / Fuel-water separators ───────────────
+  {
+    id: 'lantudongli-ff5767-fuel-water-separator',
+    sku: 'FF5767',
+    brand: 'LANTUDONGLI',
+    category: 'fuel-systems',
+    cross: ['FF5488', 'FF5580', 'FF5866', 'FF5894'],
+    photos2: [16, 17, 18, 19],
+    featured: true,
+    name: {
+      ru: 'Сепаратор топливный LANTUDONGLI FF5767',
+      en: 'LANTUDONGLI FF5767 Fuel/Water Separator',
+      uz: 'LANTUDONGLI FF5767 yoqilg‘i/suv separatori',
+    },
+  },
+  {
+    id: 'lantudongli-r120t-fuel-water-separator',
+    sku: 'R120T',
+    brand: 'LANTUDONGLI',
+    category: 'fuel-systems',
+    cross: ['R120P', 'R160T', 'K6200-1105350', 'K6500-1105350', '5801820210', 'K2000-1105350'],
+    photos2: [40, 41, 42],
+    featured: true,
+    name: {
+      ru: 'Сепаратор топливный LANTUDONGLI R120T (с отстойником)',
+      en: 'LANTUDONGLI R120T Fuel/Water Separator (with bowl)',
+      uz: 'LANTUDONGLI R120T yoqilg‘i/suv separatori (stakan bilan)',
+    },
+  },
+  {
+    id: 'lantu-pl270-fuel-water-separator',
+    sku: 'PL270',
+    brand: 'LANTU',
+    category: 'fuel-systems',
+    cross: ['1105010-488/B'],
+    photos2: [56, 58, 59, 60],
+    featured: false,
+    name: {
+      ru: 'Сепаратор топливный LANTU PL270 (с отстойником)',
+      en: 'LANTU PL270 Fuel/Water Separator (with bowl)',
+      uz: 'LANTU PL270 yoqilg‘i/suv separatori (stakan bilan)',
+    },
+  },
+  {
+    id: 'hyundai-11lb-20310-fuel-water-separator',
+    sku: '11LB-20310',
+    brand: 'Hyundai',
+    category: 'fuel-systems',
+    cross: [],
+    photos2: [84, 85, 86],
+    featured: true,
+    name: {
+      ru: 'Сепаратор топливный Hyundai 11LB-20310 (Racor/Parker)',
+      en: 'Hyundai 11LB-20310 Fuel/Water Separator (Racor/Parker)',
+      uz: 'Hyundai 11LB-20310 yoqilg‘i/suv separatori (Racor/Parker)',
+    },
+  },
+  {
+    id: 'fleetguard-fs19816-fuel-water-separator',
+    sku: 'FS19816',
+    brand: 'Fleetguard',
+    category: 'fuel-systems',
+    cross: [],
+    photos2: [87],
+    featured: true,
+    name: {
+      ru: 'Сепаратор топливный Fleetguard FS19816 (Cummins)',
+      en: 'Fleetguard FS19816 Fuel/Water Separator (Cummins)',
+      uz: 'Fleetguard FS19816 yoqilg‘i/suv separatori (Cummins)',
+    },
+  },
+
+  // ── Пневмосистема / Pneumatic ────────────────────────────────
+  {
+    id: 'lantu-4324102227-air-dryer',
+    sku: '432 410 2227',
+    brand: 'LANTU',
+    category: 'pneumatic',
+    cross: ['432 410 0202'],
+    photos2: [65, 66, 67],
+    featured: false,
+    name: {
+      ru: 'Осушитель воздуха LANTU 432 410 2227 (Air Dryer)',
+      en: 'LANTU 432 410 2227 Air Dryer',
+      uz: 'LANTU 432 410 2227 havo quritgichi (Air Dryer)',
+    },
+  },
+]
+
 const CAT_DESC = {
   'fuel-systems': {
     ru: 'Топливный фильтр для дизельной техники. Защищает ТНВД и форсунки от воды и механических примесей.',
@@ -547,10 +949,15 @@ const CAT_DESC = {
     en: 'Hydraulic filter for excavators, loaders and dump trucks. Protects pumps and control valves.',
     uz: 'Ekskavator, pogruzchik va samosvallar uchun gidravlika filtri. Nasos va gidrotaqsimlagichlarni himoya qiladi.',
   },
+  pneumatic: {
+    ru: 'Компонент пневмосистемы грузовика: осушитель воздуха для тормозной системы. Защищает контуры от влаги и коррозии.',
+    en: 'Truck pneumatic-system component: air dryer for the brake system. Protects circuits from moisture and corrosion.',
+    uz: 'Yuk mashina pnevmo tizimi komponenti: tormoz tizimi uchun havo quritgichi. Konturlarni namlik va korroziyadan himoya qiladi.',
+  },
 }
 
-export const products = P.map((p) => {
-  const images = gallery(...p.photos)
+export const products = [...P, ...P2].map((p) => {
+  const images = [...gallery(...(p.photos || [])), ...gallery2(...(p.photos2 || []))]
   return {
     id: p.id,
     sku: p.sku,

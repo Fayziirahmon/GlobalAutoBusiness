@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Maxfiy sozlamalar — HECH QACHON git ga tushmasin
+.env
+.env.local
+.env.*.local
+server/.env

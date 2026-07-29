@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import { HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from './context/ThemeContext'
 import { LanguageProvider } from './context/LanguageContext'
+import { CartProvider } from './context/CartContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -11,10 +12,11 @@ import Catalog from './pages/Catalog'
 import Products from './pages/Products'
 import ProductDetails from './pages/ProductDetails'
 import Contact from './pages/Contact'
+import Cart from './pages/Cart'
 import Admin from './pages/Admin'
 import { recordPageview } from './admin/store'
 
-const ADMIN_PATH = '/ravshfayzz'
+const ADMIN_PATH = '/ravsfayz'
 
 function ScrollToTop() {
   const { pathname, search } = useLocation()
@@ -34,6 +36,7 @@ function AnimatedRoutes() {
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path={ADMIN_PATH} element={<Admin />} />
         <Route path="*" element={<Home />} />
       </Routes>
@@ -67,9 +70,11 @@ export default function App() {
     <HelmetProvider>
       <ThemeProvider>
         <LanguageProvider>
-          <BrowserRouter>
-            <Shell />
-          </BrowserRouter>
+          <CartProvider>
+            <BrowserRouter>
+              <Shell />
+            </BrowserRouter>
+          </CartProvider>
         </LanguageProvider>
       </ThemeProvider>
     </HelmetProvider>

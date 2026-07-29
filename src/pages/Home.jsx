@@ -17,8 +17,8 @@ import Seo from '../components/Seo'
 const ease = [0.22, 1, 0.36, 1]
 
 const stats = [
-  { to: 12, suffix: 'K+', key: 'inStock' },
-  { to: 60, suffix: '+', key: 'countries' },
+  { to: 25, suffix: 'K+', key: 'inStock' },
+  { to: 10, suffix: '+', key: 'countries' },
   { display: '24/7', key: 'support' },
   { to: 99.4, decimals: 1, suffix: '%', key: 'onTime' },
 ]

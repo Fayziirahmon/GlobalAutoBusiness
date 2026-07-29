@@ -245,11 +245,11 @@ function prerender(routes, template) {
 function writeRobots() {
   const txt = `User-agent: *
 Allow: /
-Disallow: /ravshfayzz
+Disallow: /ravsfayz
 
 User-agent: Yandex
 Allow: /
-Disallow: /ravshfayzz
+Disallow: /ravsfayz
 Clean-param: page&sort&q
 
 Host: ${SITE_URL.replace(/^https?:\/\//, '')}

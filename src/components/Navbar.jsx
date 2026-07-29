@@ -3,9 +3,11 @@ import { NavLink, Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from '../context/ThemeContext'
 import { useLang } from '../context/LanguageContext'
+import { useCart } from '../context/CartContext'
 import { useScrollY } from '../hooks/useScrollAnimation'
 import { Icon } from './Icons'
 import LanguageSwitcher from './LanguageSwitcher'
+import Inbox from './Inbox'
 
 const navLinks = [
   { path: '/', key: 'home' },
@@ -42,6 +44,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { isDark, toggle } = useTheme()
   const { t } = useLang()
+  const { count } = useCart()
   const location = useLocation()
   const scrollY = useScrollY()
   const scrolled = scrollY > 40
@@ -93,6 +96,37 @@ export default function Navbar() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div className="desk-lang"><LanguageSwitcher /></div>
+
+            {/* Pochta — admin javoblari */}
+            <Inbox />
+
+            {/* Savat */}
+            <Link
+              to="/cart"
+              aria-label={t('cart.title')}
+              title={t('cart.title')}
+              style={{
+                position: 'relative', width: 39, height: 39, borderRadius: 10,
+                background: 'var(--bg3)', border: '1px solid var(--border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'var(--text)', transition: 'all 0.2s ease', flexShrink: 0,
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg4)'; e.currentTarget.style.borderColor = 'var(--border2)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--bg3)'; e.currentTarget.style.borderColor = 'var(--border)' }}
+            >
+              <Icon name="cart" size={17} />
+              {count > 0 && (
+                <span style={{
+                  position: 'absolute', top: -6, right: -6, minWidth: 19, height: 19, padding: '0 5px',
+                  borderRadius: 100, background: 'var(--accent)', color: 'var(--accent-fg)',
+                  fontSize: 11, fontWeight: 700, lineHeight: '19px', textAlign: 'center',
+                  border: '2px solid var(--bg)',
+                }}>
+                  {count > 99 ? '99+' : count}
+                </span>
+              )}
+            </Link>
+
             <button
               onClick={toggle}
               aria-label="Toggle theme"

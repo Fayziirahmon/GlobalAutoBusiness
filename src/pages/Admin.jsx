@@ -1,10 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { Icon } from '../components/Icons'
 import Seo from '../components/Seo'
 import { login, logout, isAuthed } from '../admin/auth'
-import { getStats, getMessages, markMessageRead, deleteMessage } from '../admin/store'
+import { getStats } from '../admin/store'
+import { listMessages, replyToMessage, markRead, deleteMessage, backendOnline } from '../api/messages'
+import { products } from '../data/products'
+import { categories } from '../data/categories'
 
 const fmt = (n) => (n ?? 0).toLocaleString()
 const shortDate = (iso) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
@@ -113,6 +116,8 @@ function ViewsChart({ days }) {
 /* ── Messages ─────────────────────────────────────────────── */
 function Messages({ messages, onChange }) {
   const [openId, setOpenId] = useState(null)
+  const [draft, setDraft] = useState('')
+  const [sending, setSending] = useState(false)
 
   if (messages.length === 0) {
     return (
@@ -124,10 +129,21 @@ function Messages({ messages, onChange }) {
     )
   }
 
-  const toggle = (m) => {
+  const toggle = async (m) => {
     const next = openId === m.id ? null : m.id
     setOpenId(next)
-    if (next && !m.read) { markMessageRead(m.id, true); onChange() }
+    setDraft('')
+    if (next && !m.read) { await markRead(m.id, true); onChange() }
+  }
+
+  const sendReply = async (m) => {
+    const text = draft.trim()
+    if (!text) return
+    setSending(true)
+    await replyToMessage(m.id, text)
+    setDraft('')
+    setSending(false)
+    onChange()
   }
 
   return (
@@ -156,17 +172,59 @@ function Messages({ messages, onChange }) {
                   <Detail label="Email" value={<a href={`mailto:${m.email}`} style={{ color: 'var(--text)' }}>{m.email}</a>} />
                   {m.company && <Detail label="Company" value={m.company} />}
                   <Detail label="Subject" value={m.subject} />
-                  <Detail label="Received" value={fullDate(m.date)} />
+                  <Detail label="Received" value={fullDate(m.createdAt ?? m.date)} />
                 </div>
                 <div className="caption" style={{ fontSize: 10, marginBottom: 6 }}>Message</div>
                 <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text2)', whiteSpace: 'pre-wrap' }}>{m.message}</p>
-                <div style={{ display: 'flex', gap: 10, marginTop: 18 }}>
-                  <a href={`mailto:${m.email}?subject=Re: ${encodeURIComponent(m.subject)}`} className="btn btn-primary" style={{ padding: '9px 16px', fontSize: 13 }}>
-                    <Icon name="mail" size={15} /> Reply
-                  </a>
-                  <button onClick={() => { deleteMessage(m.id); onChange() }} className="btn btn-outline" style={{ padding: '9px 16px', fontSize: 13 }}>
-                    Delete
-                  </button>
+
+                {/* Oldingi javoblar */}
+                {m.replies?.length > 0 && (
+                  <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div className="caption" style={{ fontSize: 10 }}>Your replies</div>
+                    {m.replies.map((r, i) => (
+                      <div key={i} style={{
+                        background: 'var(--bg3)', borderRadius: 10, padding: '10px 12px',
+                        borderLeft: '2px solid var(--accent)',
+                      }}>
+                        <div className="caption" style={{ fontSize: 9, marginBottom: 4 }}>{fullDate(r.createdAt)}</div>
+                        <p style={{ fontSize: 13.5, lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>{r.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Javob yozish — mijozning "Pochta" tugmasiga boradi */}
+                <div style={{ marginTop: 18 }}>
+                  <div className="caption" style={{ fontSize: 10, marginBottom: 8 }}>Reply on site</div>
+                  <textarea
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    rows={3}
+                    placeholder="Ответ клиенту — появится у него в «Почте» на сайте…"
+                    style={{
+                      width: '100%', padding: '11px 14px', background: 'var(--bg2)',
+                      border: '1px solid var(--border2)', borderRadius: 10,
+                      fontSize: 14, color: 'var(--text)', resize: 'vertical', minHeight: 80,
+                    }}
+                  />
+                  <div style={{ display: 'flex', gap: 10, marginTop: 12, flexWrap: 'wrap' }}>
+                    <button
+                      onClick={() => sendReply(m)}
+                      disabled={sending || !draft.trim()}
+                      className="btn btn-primary"
+                      style={{ padding: '9px 18px', fontSize: 13, opacity: sending || !draft.trim() ? 0.5 : 1 }}
+                    >
+                      <Icon name="mail" size={15} /> {sending ? 'Sending…' : 'Send reply'}
+                    </button>
+                    {m.email && (
+                      <a href={`mailto:${m.email}?subject=Re: ${encodeURIComponent(m.subject || '')}`} className="btn btn-outline" style={{ padding: '9px 16px', fontSize: 13 }}>
+                        Email
+                      </a>
+                    )}
+                    <button onClick={async () => { await deleteMessage(m.id); onChange() }} className="btn btn-outline" style={{ padding: '9px 16px', fontSize: 13 }}>
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -194,9 +252,37 @@ function Dashboard({ onLogout }) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const stats = useMemo(() => getStats(), [tick])
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const messages = useMemo(() => getMessages(), [tick])
+
+  // Xabarlar backenddan (yoki lokal zaxiradan) yuklanadi
+  const [messages, setMessages] = useState([])
+  const [online, setOnline] = useState(false)
+
+  const loadMessages = useCallback(async () => {
+    const list = await listMessages()
+    setMessages(list)
+    setOnline(backendOnline)
+  }, [])
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- odatiy ma'lumot yuklash (async fetch)
+  useEffect(() => { loadMessages() }, [loadMessages, tick])
+
   const unread = messages.filter((m) => !m.read).length
+
+  // Katalog ma'lumotlari
+  const catalogStats = useMemo(() => {
+    const byCat = {}
+    products.forEach((p) => { byCat[p.category] = (byCat[p.category] || 0) + 1 })
+    const brands = new Set(products.map((p) => p.brand).filter((b) => b && b !== 'GAB'))
+    const photos = products.reduce((s, p) => s + (p.images?.length || 0), 0)
+    return {
+      products: products.length,
+      categories: categories.length,
+      activeCategories: Object.keys(byCat).length,
+      brands: brands.size,
+      photos,
+      byCat,
+    }
+  }, [])
 
   const pathLabel = (p) => (p === '/' ? 'Home' : p.replace('/', '').split('?')[0] || p)
 
@@ -213,6 +299,18 @@ function Dashboard({ onLogout }) {
             <div style={{ fontSize: 10, color: 'var(--text3)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>GlobalAutoBusiness</div>
           </div>
           <div style={{ flex: 1 }} />
+          {/* Backend holati — yozishma haqiqatan ishlayaptimi */}
+          <span
+            title={online ? 'Backend ulangan — xabarlar bazada' : 'Backend yo\'q — faqat shu brauzerda'}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 7, marginRight: 6,
+              fontSize: 11.5, fontWeight: 600, color: online ? 'var(--text2)' : '#e5484d',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: online ? '#30a46c' : '#e5484d' }} />
+            {online ? 'Backend' : 'Локально'}
+          </span>
           <button onClick={refresh} title="Refresh" style={iconBtn}><Icon name="support" size={17} /></button>
           <button onClick={toggle} title="Theme" style={iconBtn}><Icon name={isDark ? 'sun' : 'moon'} size={17} /></button>
           <Link to="/" style={{ ...iconBtn, textDecoration: 'none' }} title="View site"><Icon name="globe" size={17} /></Link>
@@ -227,6 +325,14 @@ function Dashboard({ onLogout }) {
           <Stat icon="support" label="Sessions" value={fmt(stats.sessions)} sub="unique visits" />
           <Stat icon="arrowUpRight" label="Views today" value={fmt(stats.today)} />
           <Stat icon="mail" label="Messages" value={fmt(messages.length)} sub={unread ? `${unread} unread` : 'all read'} />
+        </div>
+
+        {/* Katalog ma'lumotlari */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16, marginBottom: 28 }}>
+          <Stat icon="box" label="Products" value={fmt(catalogStats.products)} sub={`${catalogStats.photos} photos`} />
+          <Stat icon="filters" label="Categories" value={`${catalogStats.activeCategories}/${catalogStats.categories}`} sub="with products" />
+          <Stat icon="truck" label="Brands" value={fmt(catalogStats.brands)} sub="in catalog" />
+          <Stat icon="cog" label="Site pages" value="60" sub="indexed (sitemap)" />
         </div>
 
         {/* Chart */}
@@ -276,7 +382,7 @@ export default function Admin() {
 
   return (
     <>
-      <Seo title="Admin — GlobalAutoBusiness" noindex canonicalPath="/ravshfayzz" />
+      <Seo title="Admin — GlobalAutoBusiness" noindex canonicalPath="/ravsfayz" />
       {authed
         ? <Dashboard onLogout={() => { logout(); setAuthed(false) }} />
         : <LoginScreen onSuccess={() => setAuthed(true)} />}

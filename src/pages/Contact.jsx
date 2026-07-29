@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
 import Reveal from '../components/Reveal'
 import { Icon } from '../components/Icons'
 import { useLang } from '../context/LanguageContext'
 import Seo from '../components/Seo'
-import { addMessage } from '../admin/store'
+import { sendMessage } from '../api/messages'
 
 const channels = [
   {
@@ -22,7 +23,13 @@ const channels = [
 export default function Contact() {
   const { t } = useLang()
   const subjects = t('contact.subjects')
-  const [form, setForm] = useState({ name: '', email: '', company: '', subjectIdx: 0, message: '' })
+  // Savatdan "So'rov yuborish" bosilganda ro'yxat shu yerga tushadi
+  const { state } = useLocation()
+  const [form, setForm] = useState({
+    name: '', email: '', company: '',
+    subjectIdx: state?.subjectIdx ?? 0,
+    message: state?.message ?? '',
+  })
   const [status, setStatus] = useState('idle') // idle | sending | sent
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
@@ -30,19 +37,16 @@ export default function Contact() {
   const submit = async (e) => {
     e.preventDefault()
     setStatus('sending')
-    const payload = { ...form, subject: subjects[form.subjectIdx] }
-    // Save locally so the message shows up in the admin panel (works
-    // without a backend). Also POST to the placeholder API for later.
-    addMessage({ name: payload.name, email: payload.email, company: payload.company, subject: payload.subject, message: payload.message })
-    try {
-      await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      }).catch(() => {}) // swallow network error in demo mode
-    } finally {
-      setTimeout(() => setStatus('sent'), 600)
-    }
+    // Backend ishlasa bazaga tushadi (admin boshqa qurilmadan ham ko'radi),
+    // ishlamasa lokal saqlanadi — sendMessage o'zi hal qiladi.
+    await sendMessage({
+      name: form.name,
+      email: form.email,
+      company: form.company,
+      subject: subjects[form.subjectIdx],
+      message: form.message,
+    })
+    setStatus('sent')
   }
 
   return (
