@@ -240,6 +240,42 @@ function prerender(routes, template) {
   return count
 }
 
+/* ── 3b. SPA fallback ─────────────────────────────────────────
+ *  Prerender faqat sitemap'dagi yo'llarni yozadi. Admin (/ravsfayz)
+ *  va boshqa "deep-link"lar uchun jismoniy HTML kerak — aks holda
+ *  statik hosting to'g'ridan-to'g'ri kirishda 404 beradi.
+ *
+ *   • dist/404.html            → ko'p hosting noma'lum yo'lda shuni beradi
+ *   • dist/ravsfayz/index.html → admin panel to'g'ridan ochilishi uchun
+ *   • dist/_redirects          → Netlify uchun SPA rewrite
+ *   • dist/vercel.json         → Vercel uchun SPA rewrite
+ *  ------------------------------------------------------------- */
+function writeSpaFallback(template) {
+  // Admin sahifa qidiruvga tushmasin — noindex qo'yamiz.
+  const adminShell = template.replace(
+    '</head>',
+    '    <meta name="robots" content="noindex,nofollow" />\n  </head>'
+  )
+
+  // Umumiy 404 — SPA yuklanib, React Router kerakli sahifani ko'rsatadi.
+  fs.writeFileSync(path.join(DIST, '404.html'), template, 'utf8')
+
+  // Admin uchun aniq papka.
+  const adminDir = path.join(DIST, 'ravsfayz')
+  fs.mkdirSync(adminDir, { recursive: true })
+  fs.writeFileSync(path.join(adminDir, 'index.html'), adminShell, 'utf8')
+
+  // Netlify SPA rewrite (fayl bo'lmasa index.html qaytaradi).
+  fs.writeFileSync(path.join(DIST, '_redirects'), '/*    /index.html   200\n', 'utf8')
+
+  // Vercel SPA rewrite.
+  fs.writeFileSync(
+    path.join(DIST, 'vercel.json'),
+    JSON.stringify({ rewrites: [{ source: '/(.*)', destination: '/index.html' }] }, null, 2),
+    'utf8'
+  )
+}
+
 /* ── 4. robots.txt ────────────────────────────────────────── */
 
 function writeRobots() {
@@ -271,11 +307,13 @@ const routes = buildRoutes()
 
 const sitemapCount = writeSitemap(routes)
 const pageCount = prerender(routes, template)
+writeSpaFallback(template)
 writeRobots()
 
 console.log(`[seo] sitemap.xml     → ${sitemapCount} ta URL`)
 console.log(`[seo] prerender       → ${pageCount} ta HTML sahifa`)
 console.log(`[seo]   • kategoriya  → ${categories.length}`)
 console.log(`[seo]   • mahsulot    → ${products.length}`)
+console.log(`[seo] SPA fallback     → 404.html, ravsfayz/index.html, _redirects, vercel.json`)
 console.log(`[seo] robots.txt      → yozildi (Yandex Host/Clean-param bilan)`)
 console.log(`[seo] ORG telefon     → ${ORG.phone.join(', ')}`)
