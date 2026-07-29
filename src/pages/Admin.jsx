@@ -9,9 +9,9 @@ import { listMessages, replyToMessage, markRead, deleteMessage, backendOnline } 
 import { products } from '../data/products'
 import { categories } from '../data/categories'
 
-const fmt = (n) => (n ?? 0).toLocaleString()
-const shortDate = (iso) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-const fullDate = (iso) => new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+const fmt = (n) => (n ?? 0).toLocaleString('ru-RU')
+const shortDate = (iso) => new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })
+const fullDate = (iso) => new Date(iso).toLocaleString('ru-RU', { dateStyle: 'medium', timeStyle: 'short' })
 
 /* ── Login screen ─────────────────────────────────────────── */
 function LoginScreen({ onSuccess }) {
@@ -27,14 +27,15 @@ function LoginScreen({ onSuccess }) {
 
   const field = {
     width: '100%', padding: '13px 16px', background: 'var(--bg2)',
-    border: '1px solid var(--border2)', borderRadius: 10, fontSize: 15, color: 'var(--text)',
+    border: `1px solid ${error ? '#e5484d' : 'var(--border2)'}`, borderRadius: 12, fontSize: 15, color: 'var(--text)',
+    transition: 'border-color 0.15s',
   }
 
   return (
-    <div style={{ minHeight: '100svh', display: 'grid', placeItems: 'center', background: 'var(--bg)', padding: 24 }}>
+    <div style={{ minHeight: '100svh', display: 'grid', placeItems: 'center', background: 'var(--bg2)', padding: 24 }}>
       <div style={{ width: '100%', maxWidth: 400 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center', marginBottom: 28 }}>
-          <div style={{ width: 46, height: 46, borderRadius: 11, overflow: 'hidden', background: '#fff', border: '1px solid var(--border)' }}>
+          <div style={{ width: 46, height: 46, borderRadius: 12, overflow: 'hidden', background: '#fff', border: '1px solid var(--border)' }}>
             <img src="/logo.jpg" alt="GlobalAutoBusiness" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 19, letterSpacing: '-0.4px' }}>
@@ -44,27 +45,27 @@ function LoginScreen({ onSuccess }) {
 
         <div className="card" style={{ padding: 32 }}>
           <div style={{ textAlign: 'center', marginBottom: 24 }}>
-            <div style={{ display: 'inline-flex', marginBottom: 12, color: 'var(--text2)' }}><Icon name="shield" size={30} /></div>
-            <h1 style={{ fontFamily: 'Space Grotesk', fontSize: 22, fontWeight: 700, letterSpacing: '-0.5px' }}>Admin Panel</h1>
-            <p style={{ fontSize: 13.5, color: 'var(--text3)', marginTop: 6 }}>Sign in to continue</p>
+            <div style={{ display: 'inline-flex', marginBottom: 12, color: 'var(--accent)' }}><Icon name="shield" size={30} /></div>
+            <h1 style={{ fontFamily: 'Space Grotesk', fontSize: 22, fontWeight: 700, letterSpacing: '-0.5px' }}>Панель администратора</h1>
+            <p style={{ fontSize: 13.5, color: 'var(--text3)', marginTop: 6 }}>Войдите, чтобы продолжить</p>
           </div>
 
           <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <input autoFocus placeholder="Login" value={username} onChange={(e) => { setUsername(e.target.value); setError(false) }} style={field} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => { setPassword(e.target.value); setError(false) }} style={field} />
+            <input autoFocus placeholder="Логин" value={username} onChange={(e) => { setUsername(e.target.value); setError(false) }} style={field} />
+            <input type="password" placeholder="Пароль" value={password} onChange={(e) => { setPassword(e.target.value); setError(false) }} style={field} />
             {error && (
               <div style={{ fontSize: 13, color: '#e5484d', display: 'flex', alignItems: 'center', gap: 7 }}>
-                <Icon name="shield" size={15} /> Invalid login or password
+                <Icon name="shield" size={15} /> Неверный логин или пароль
               </div>
             )}
             <button type="submit" className="btn btn-primary btn-lg btn-block" style={{ marginTop: 4 }}>
-              Sign In <Icon name="arrow" size={17} />
+              Войти <Icon name="arrow" size={17} />
             </button>
           </form>
         </div>
 
         <div style={{ textAlign: 'center', marginTop: 20 }}>
-          <Link to="/" style={{ fontSize: 13, color: 'var(--text3)' }}>← Back to site</Link>
+          <Link to="/" style={{ fontSize: 13, color: 'var(--text3)' }}>← На сайт</Link>
         </div>
       </div>
     </div>
@@ -72,12 +73,12 @@ function LoginScreen({ onSuccess }) {
 }
 
 /* ── Stat card ────────────────────────────────────────────── */
-function Stat({ icon, label, value, sub }) {
+function Stat({ icon, label, value, sub, tone = 'var(--accent)' }) {
   return (
     <div className="card" style={{ padding: 22 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <span className="caption" style={{ fontSize: 10.5 }}>{label}</span>
-        <span style={{ width: 34, height: 34, borderRadius: 9, background: 'var(--bg3)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text2)' }}>
+        <span style={{ width: 34, height: 34, borderRadius: 10, background: `color-mix(in srgb, ${tone} 14%, transparent)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: tone }}>
           <Icon name={icon} size={17} />
         </span>
       </div>
@@ -93,8 +94,8 @@ function ViewsChart({ days }) {
   return (
     <div className="card" style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600 }}>Page views — last 14 days</h3>
-        <span className="caption" style={{ fontSize: 10.5 }}>{fmt(days.reduce((s, d) => s + d.count, 0))} total</span>
+        <h3 style={{ fontSize: 15, fontWeight: 600 }}>Просмотры — последние 14 дней</h3>
+        <span className="caption" style={{ fontSize: 10.5 }}>{fmt(days.reduce((s, d) => s + d.count, 0))} всего</span>
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 160 }}>
         {days.map((d) => (
@@ -105,7 +106,7 @@ function ViewsChart({ days }) {
               background: d.count ? 'var(--accent)' : 'var(--bg3)',
               transition: 'height 0.4s var(--ease)',
             }} />
-            <span style={{ fontSize: 9.5, color: 'var(--text3)' }}>{shortDate(d.date).split(' ')[1]}</span>
+            <span style={{ fontSize: 9.5, color: 'var(--text3)' }}>{shortDate(d.date).split(' ')[0]}</span>
           </div>
         ))}
       </div>
@@ -123,8 +124,8 @@ function Messages({ messages, onChange }) {
     return (
       <div className="card" style={{ padding: 40, textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', marginBottom: 12, color: 'var(--text3)' }}><Icon name="mail" size={34} strokeWidth={1.3} /></div>
-        <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>No messages yet</h3>
-        <p style={{ fontSize: 13.5, color: 'var(--text3)' }}>Submissions from the Contact page will appear here.</p>
+        <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Сообщений пока нет</h3>
+        <p style={{ fontSize: 13.5, color: 'var(--text3)' }}>Заявки со страницы «Контакты» появятся здесь.</p>
       </div>
     )
   }
@@ -151,36 +152,47 @@ function Messages({ messages, onChange }) {
       {messages.map((m) => {
         const open = openId === m.id
         return (
-          <div key={m.id} className="card" style={{ padding: 0, overflow: 'hidden' }}>
-            <button onClick={() => toggle(m)} style={{ width: '100%', background: 'transparent', textAlign: 'left', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
-              {!m.read && <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />}
+          <div key={m.id} className="card" style={{ padding: 0, overflow: 'hidden', border: !m.read ? '1px solid color-mix(in srgb, var(--accent) 40%, var(--border))' : undefined }}>
+            <button onClick={() => toggle(m)} style={{ width: '100%', background: 'transparent', textAlign: 'left', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }}>
+              {!m.read
+                ? <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
+                : <span style={{ width: 8, flexShrink: 0 }} />}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontWeight: m.read ? 500 : 700, fontSize: 14.5, color: 'var(--text)' }}>{m.name || 'Anonymous'}</span>
+                  <span style={{ fontWeight: m.read ? 500 : 700, fontSize: 14.5, color: 'var(--text)' }}>{m.name || 'Аноним'}</span>
                   <span style={{ fontSize: 12, color: 'var(--text3)' }}>· {m.subject}</span>
+                  {m.replies?.length > 0 && (
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: 'var(--text3)', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                      <Icon name="mail" size={12} />{m.replies.length}
+                    </span>
+                  )}
                 </div>
                 <div style={{ fontSize: 12.5, color: 'var(--text3)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {m.message}
                 </div>
               </div>
-              <span style={{ fontSize: 11.5, color: 'var(--text3)', flexShrink: 0 }}>{shortDate(m.date)}</span>
+              <span style={{ fontSize: 11.5, color: 'var(--text3)', flexShrink: 0 }}>{shortDate(m.createdAt ?? m.date)}</span>
+              <span style={{ color: 'var(--text3)', flexShrink: 0, display: 'inline-flex', transform: open ? 'rotate(270deg)' : 'rotate(90deg)', transition: 'transform 0.2s' }}>
+                <Icon name="arrow" size={15} />
+              </span>
             </button>
 
             {open && (
               <div style={{ padding: '4px 20px 20px', borderTop: '1px solid var(--border)' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, margin: '16px 0' }}>
-                  <Detail label="Email" value={<a href={`mailto:${m.email}`} style={{ color: 'var(--text)' }}>{m.email}</a>} />
-                  {m.company && <Detail label="Company" value={m.company} />}
-                  <Detail label="Subject" value={m.subject} />
-                  <Detail label="Received" value={fullDate(m.createdAt ?? m.date)} />
+                  <Detail label="E-mail" value={<a href={`mailto:${m.email}`} style={{ color: 'var(--text)' }}>{m.email}</a>} />
+                  {m.company && <Detail label="Компания" value={m.company} />}
+                  {m.phone && <Detail label="Телефон" value={<a href={`tel:${m.phone}`} style={{ color: 'var(--text)' }}>{m.phone}</a>} />}
+                  <Detail label="Тема" value={m.subject} />
+                  <Detail label="Получено" value={fullDate(m.createdAt ?? m.date)} />
                 </div>
-                <div className="caption" style={{ fontSize: 10, marginBottom: 6 }}>Message</div>
+                <div className="caption" style={{ fontSize: 10, marginBottom: 6 }}>Сообщение</div>
                 <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text2)', whiteSpace: 'pre-wrap' }}>{m.message}</p>
 
                 {/* Oldingi javoblar */}
                 {m.replies?.length > 0 && (
                   <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    <div className="caption" style={{ fontSize: 10 }}>Your replies</div>
+                    <div className="caption" style={{ fontSize: 10 }}>Ваши ответы</div>
                     {m.replies.map((r, i) => (
                       <div key={i} style={{
                         background: 'var(--bg3)', borderRadius: 10, padding: '10px 12px',
@@ -195,12 +207,12 @@ function Messages({ messages, onChange }) {
 
                 {/* Javob yozish — mijozning "Pochta" tugmasiga boradi */}
                 <div style={{ marginTop: 18 }}>
-                  <div className="caption" style={{ fontSize: 10, marginBottom: 8 }}>Reply on site</div>
+                  <div className="caption" style={{ fontSize: 10, marginBottom: 8 }}>Ответить клиенту</div>
                   <textarea
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
                     rows={3}
-                    placeholder="Ответ клиенту — появится у него в «Почте» на сайте…"
+                    placeholder="Ответ появится у клиента в разделе «Почта» на сайте…"
                     style={{
                       width: '100%', padding: '11px 14px', background: 'var(--bg2)',
                       border: '1px solid var(--border2)', borderRadius: 10,
@@ -214,15 +226,15 @@ function Messages({ messages, onChange }) {
                       className="btn btn-primary"
                       style={{ padding: '9px 18px', fontSize: 13, opacity: sending || !draft.trim() ? 0.5 : 1 }}
                     >
-                      <Icon name="mail" size={15} /> {sending ? 'Sending…' : 'Send reply'}
+                      <Icon name="mail" size={15} /> {sending ? 'Отправка…' : 'Отправить'}
                     </button>
                     {m.email && (
                       <a href={`mailto:${m.email}?subject=Re: ${encodeURIComponent(m.subject || '')}`} className="btn btn-outline" style={{ padding: '9px 16px', fontSize: 13 }}>
-                        Email
+                        E-mail
                       </a>
                     )}
-                    <button onClick={async () => { await deleteMessage(m.id); onChange() }} className="btn btn-outline" style={{ padding: '9px 16px', fontSize: 13 }}>
-                      Delete
+                    <button onClick={async () => { if (confirm('Удалить сообщение?')) { await deleteMessage(m.id); onChange() } }} className="btn btn-outline" style={{ padding: '9px 16px', fontSize: 13, marginLeft: 'auto' }}>
+                      Удалить
                     </button>
                   </div>
                 </div>
@@ -240,6 +252,31 @@ function Detail({ label, value }) {
     <div>
       <div className="caption" style={{ fontSize: 10, marginBottom: 3 }}>{label}</div>
       <div style={{ fontSize: 13.5, color: 'var(--text)', fontWeight: 500, wordBreak: 'break-word' }}>{value}</div>
+    </div>
+  )
+}
+
+/* ── Local-mode info banner ───────────────────────────────── */
+function LocalBanner() {
+  const [hidden, setHidden] = useState(false)
+  if (hidden) return null
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'flex-start', gap: 12,
+      background: 'color-mix(in srgb, #d9822b 12%, var(--bg))',
+      border: '1px solid color-mix(in srgb, #d9822b 35%, var(--border))',
+      borderRadius: 14, padding: '14px 16px', marginBottom: 24,
+    }}>
+      <span style={{ color: '#d9822b', flexShrink: 0, marginTop: 1 }}><Icon name="shield" size={18} /></span>
+      <div style={{ flex: 1, fontSize: 13, lineHeight: 1.55, color: 'var(--text2)' }}>
+        <strong style={{ color: 'var(--text)' }}>Локальный режим.</strong>{' '}
+        Сервер не подключён — сообщения и статистика хранятся только в этом браузере
+        и не видны на других устройствах. Чтобы получать заявки с любого устройства,
+        подключите сервер (папка <code style={{ fontSize: 12 }}>server/</code>) с базой MongoDB.
+      </div>
+      <button onClick={() => setHidden(true)} title="Скрыть" style={{ background: 'transparent', color: 'var(--text3)', flexShrink: 0, padding: 2, cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>
+        ×
+      </button>
     </div>
   )
 }
@@ -280,11 +317,11 @@ function Dashboard({ onLogout }) {
       activeCategories: Object.keys(byCat).length,
       brands: brands.size,
       photos,
-      byCat,
     }
   }, [])
 
-  const pathLabel = (p) => (p === '/' ? 'Home' : p.replace('/', '').split('?')[0] || p)
+  const sitePages = 4 + categories.length + catalogStats.products
+  const pathLabel = (p) => (p === '/' ? 'Главная' : p.replace('/', '').split('?')[0] || p)
 
   return (
     <div style={{ minHeight: '100svh', background: 'var(--bg2)' }}>
@@ -295,44 +332,50 @@ function Dashboard({ onLogout }) {
             <img src="/logo.jpg" alt="GlobalAutoBusiness" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div style={{ lineHeight: 1.1 }}>
-            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 15, letterSpacing: '-0.3px' }}>Admin Dashboard</div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 15, letterSpacing: '-0.3px' }}>Панель управления</div>
             <div style={{ fontSize: 10, color: 'var(--text3)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>GlobalAutoBusiness</div>
           </div>
           <div style={{ flex: 1 }} />
-          {/* Backend holati — yozishma haqiqatan ishlayaptimi */}
+          {/* Backend holati */}
           <span
-            title={online ? 'Backend ulangan — xabarlar bazada' : 'Backend yo\'q — faqat shu brauzerda'}
+            title={online ? 'Сервер подключён — данные в базе, видны везде' : 'Локальный режим — данные только в этом браузере'}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 7, marginRight: 6,
-              fontSize: 11.5, fontWeight: 600, color: online ? 'var(--text2)' : '#e5484d',
-              whiteSpace: 'nowrap',
+              display: 'inline-flex', alignItems: 'center', gap: 7, marginRight: 4,
+              fontSize: 11.5, fontWeight: 600, whiteSpace: 'nowrap',
+              padding: '5px 11px', borderRadius: 100,
+              color: online ? '#30a46c' : '#d9822b',
+              background: online ? 'color-mix(in srgb, #30a46c 12%, transparent)' : 'color-mix(in srgb, #d9822b 12%, transparent)',
             }}
           >
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: online ? '#30a46c' : '#e5484d' }} />
-            {online ? 'Backend' : 'Локально'}
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: online ? '#30a46c' : '#d9822b' }} />
+            {online ? 'Онлайн' : 'Локальный режим'}
           </span>
-          <button onClick={refresh} title="Refresh" style={iconBtn}><Icon name="support" size={17} /></button>
-          <button onClick={toggle} title="Theme" style={iconBtn}><Icon name={isDark ? 'sun' : 'moon'} size={17} /></button>
-          <Link to="/" style={{ ...iconBtn, textDecoration: 'none' }} title="View site"><Icon name="globe" size={17} /></Link>
-          <button onClick={onLogout} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: 13 }}>Logout</button>
+          <button onClick={refresh} title="Обновить" style={iconBtn}><Icon name="support" size={17} /></button>
+          <button onClick={toggle} title="Тема" style={iconBtn}><Icon name={isDark ? 'sun' : 'moon'} size={17} /></button>
+          <Link to="/" style={{ ...iconBtn, textDecoration: 'none' }} title="Открыть сайт"><Icon name="globe" size={17} /></Link>
+          <button onClick={onLogout} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: 13 }}>Выйти</button>
         </div>
       </header>
 
-      <main style={{ maxWidth: 1160, margin: '0 auto', padding: '32px 24px 80px' }}>
-        {/* Stats */}
+      <main style={{ maxWidth: 1160, margin: '0 auto', padding: '28px 24px 80px' }}>
+        {!online && <LocalBanner />}
+
+        {/* Statistika sayti */}
+        <h2 style={{ fontFamily: 'Space Grotesk', fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--text2)', marginBottom: 14 }}>Статистика сайта</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 16 }}>
-          <Stat icon="globe" label="Total page views" value={fmt(stats.totalViews)} sub={stats.firstVisit ? `since ${shortDate(stats.firstVisit)}` : null} />
-          <Stat icon="support" label="Sessions" value={fmt(stats.sessions)} sub="unique visits" />
-          <Stat icon="arrowUpRight" label="Views today" value={fmt(stats.today)} />
-          <Stat icon="mail" label="Messages" value={fmt(messages.length)} sub={unread ? `${unread} unread` : 'all read'} />
+          <Stat icon="globe" label="Просмотры страниц" value={fmt(stats.totalViews)} sub={stats.firstVisit ? `с ${shortDate(stats.firstVisit)}` : null} />
+          <Stat icon="support" label="Сессии" value={fmt(stats.sessions)} sub="уникальные визиты" tone="#8b5cf6" />
+          <Stat icon="arrowUpRight" label="Просмотры сегодня" value={fmt(stats.today)} tone="#30a46c" />
+          <Stat icon="mail" label="Сообщения" value={fmt(messages.length)} sub={unread ? `${unread} непрочитанных` : 'все прочитаны'} tone="#d9822b" />
         </div>
 
         {/* Katalog ma'lumotlari */}
+        <h2 style={{ fontFamily: 'Space Grotesk', fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--text2)', margin: '26px 0 14px' }}>Каталог</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16, marginBottom: 28 }}>
-          <Stat icon="box" label="Products" value={fmt(catalogStats.products)} sub={`${catalogStats.photos} photos`} />
-          <Stat icon="filters" label="Categories" value={`${catalogStats.activeCategories}/${catalogStats.categories}`} sub="with products" />
-          <Stat icon="truck" label="Brands" value={fmt(catalogStats.brands)} sub="in catalog" />
-          <Stat icon="cog" label="Site pages" value="60" sub="indexed (sitemap)" />
+          <Stat icon="box" label="Товары" value={fmt(catalogStats.products)} sub={`${catalogStats.photos} фото`} />
+          <Stat icon="filters" label="Категории" value={`${catalogStats.activeCategories}/${catalogStats.categories}`} sub="с товарами" tone="#8b5cf6" />
+          <Stat icon="truck" label="Бренды" value={fmt(catalogStats.brands)} sub="в каталоге" tone="#30a46c" />
+          <Stat icon="cog" label="Страницы сайта" value={fmt(sitePages)} sub="в карте сайта" tone="#d9822b" />
         </div>
 
         {/* Chart */}
@@ -342,21 +385,21 @@ function Dashboard({ onLogout }) {
         <div className="admin-grid" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 24, alignItems: 'start' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <h2 style={{ fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: 700, letterSpacing: '-0.4px' }}>Contact messages</h2>
-              {unread > 0 && <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent-fg)', background: 'var(--accent)', padding: '3px 10px', borderRadius: 100 }}>{unread} new</span>}
+              <h2 style={{ fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: 700, letterSpacing: '-0.4px' }}>Сообщения с сайта</h2>
+              {unread > 0 && <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent-fg)', background: 'var(--accent)', padding: '3px 10px', borderRadius: 100 }}>{unread} новых</span>}
             </div>
             <Messages messages={messages} onChange={refresh} />
           </div>
 
           <div>
-            <h2 style={{ fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: 700, letterSpacing: '-0.4px', marginBottom: 16 }}>Top pages</h2>
+            <h2 style={{ fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: 700, letterSpacing: '-0.4px', marginBottom: 16 }}>Популярные страницы</h2>
             <div className="card" style={{ padding: 20 }}>
               {stats.topPaths.length === 0 ? (
-                <p style={{ fontSize: 13.5, color: 'var(--text3)' }}>No data yet.</p>
+                <p style={{ fontSize: 13.5, color: 'var(--text3)' }}>Пока нет данных.</p>
               ) : (
                 stats.topPaths.map((p, i) => (
                   <div key={p.path} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 0', borderTop: i ? '1px solid var(--border)' : 'none' }}>
-                    <span style={{ fontSize: 13.5, color: 'var(--text)', fontWeight: 500, textTransform: 'capitalize' }}>{pathLabel(p.path)}</span>
+                    <span style={{ fontSize: 13.5, color: 'var(--text)', fontWeight: 500 }}>{pathLabel(p.path)}</span>
                     <span style={{ fontSize: 13, color: 'var(--text3)', fontFamily: 'Space Grotesk', fontWeight: 600 }}>{fmt(p.count)}</span>
                   </div>
                 ))
@@ -373,7 +416,7 @@ function Dashboard({ onLogout }) {
 
 const iconBtn = {
   width: 38, height: 38, borderRadius: 10, background: 'var(--bg3)', border: '1px solid var(--border)',
-  display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text)',
+  display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text)', cursor: 'pointer',
 }
 
 /* ── Route entry ──────────────────────────────────────────── */

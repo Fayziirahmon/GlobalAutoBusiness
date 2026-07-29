@@ -2,8 +2,13 @@ import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-dotenv.config();
+// .env HAR DOIM shu papkadan (server/.env) o'qilsin — ildizdan ishga
+// tushirilsa ham (npm run server). Aks holda MONGO_URI topilmaydi.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
@@ -192,9 +197,20 @@ app.post('/api/products', async (req: Request, res: Response) => {
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI as string;
 
-mongoose.connect(MONGO_URI)
+if (!MONGO_URI) {
+  console.error('\n❌ MONGO_URI topilmadi. server/.env faylini tekshiring.\n');
+  process.exit(1);
+}
+
+mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 8000 })
   .then(() => {
-    console.log('MongoDB ga muvaffaqiyatli ulanildi');
-    app.listen(PORT, () => console.log(`Server ${PORT}-portda ishlayapti`));
+    console.log('✅ MongoDB ga ulanildi. Baza:', mongoose.connection.name);
+    app.listen(PORT, () => console.log(`🚀 Server tayyor →  http://localhost:${PORT}`));
   })
-  .catch((err) => console.error('MongoDB ulanish xatosi:', err));
+  .catch((err) => {
+    console.error('\n❌ MongoDB ga ulanib bo\'lmadi:', err.message);
+    console.error('   Tekshiring: (1) Atlas → Network Access → 0.0.0.0/0 ruxsat berilganmi');
+    console.error('               (2) foydalanuvchi/parol to\'g\'rimi (server/.env)');
+    console.error('               (3) internet/DNS ishlayaptimi\n');
+    process.exit(1);
+  });
