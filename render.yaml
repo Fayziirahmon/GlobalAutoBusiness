@@ -1,0 +1,21 @@
+# ─────────────────────────────────────────────────────────────
+#  Render.com blueprint — GlobalAutoBusiness backend (API)
+#
+#  Render → New → Blueprint → shu repo ni tanlang → Apply.
+#  MONGO_URI ni Render dashboard'da qo'lda kiritasiz (git'ga tushmaydi).
+#  PORT ni Render o'zi beradi — server process.env.PORT ni oladi.
+# ─────────────────────────────────────────────────────────────
+services:
+  - type: web
+    name: globalautobusiness-api
+    runtime: node
+    rootDir: server
+    plan: free
+    region: frankfurt
+    branch: GAB
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: MONGO_URI
+        sync: false

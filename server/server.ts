@@ -16,6 +16,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Sog'liqni tekshirish — Render health check va API tirikligini bildiradi.
+app.get('/', (_req: Request, res: Response) => {
+  res.json({
+    ok: true,
+    service: 'GlobalAutoBusiness API',
+    db: mongoose.connection.readyState === 1 ? 'connected' : 'not-connected',
+  });
+});
+
 // 1. Mahsulot strukturasi
 interface IProduct {
   title: string;
